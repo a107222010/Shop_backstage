@@ -1,0 +1,128 @@
+{% extends 'base.html'%}
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+
+{% block content %}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li class="brand-text font-weight-light">
+                    <font size='10'>商品新增</font>
+                </li>
+            </ol>
+        </section>
+        
+        <div class="main-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="product_id" class="form-label">產品ID</label>
+                    <input type="text" class="form-control" placeholder="請輸入產品ID" id="product_id" name="product_id"
+                        required>
+                    <div id="emailHelp" class="form-text">請勿與其他商品重複</div>
+                </div>
+                <div class="mb-3">
+                    <label for="product_name" class="form-label">產品名稱</label>
+                    <input type="text" class="form-control" id="product_name" placeholder="請輸入產品名稱" name="product_name"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="product_sort" class="form-label">產品分類</label>
+                    <select class="form-control" id="mySelect" name="product_sort">
+                        {% for sorts in sort %}
+                        <option value="" style="display: none">----</option>
+                        <option value="{{ sorts.sort_type }}" class="form-control" >{{ sorts.sort_type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="product_pic" class="form-label">選擇產品圖片</label>
+                    <input type="file" class="form-control" id="product_pic" name="product_pic">
+                </div>
+                <div class="mb-3">
+                    <label for="product_add" class="form-label">產品加料分類</label>
+                    <select class="form-control"  name="product_add">
+                        {% for add_rule in saverecord_addrule %}
+                        <option value="" style="display: none">----</option>
+                        <option value="{{ add_rule.product_add }}" class="form-control" >{{ add_rule.product_add }} - {{ add_rule.add_chinese }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="product_introduction" class="form-label">產品介紹</label>
+                    <input type="text" class="form-control" id="product_introduction" placeholder="請輸入產品介紹"
+                        name="product_introduction" required>
+                </div>
+                <div class="mb-3">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home">杯裝</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile">份裝</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <table class="table table-hover">                                
+                                <tbody>
+                                    <tr>
+                                        <div class="mb-3">
+                                            <label class="form-label">產品價格</label>
+                                            <br>
+                                            <input type="text" id="product_sizes" value="小杯" disabled readonly >
+                                            <input type="text" id="product_sizes" value="中杯" disabled readonly >
+                                            <input type="text" id="product_sizes" value="大杯" disabled readonly >
+                                            <input type="text" id="product_sizes" value="特大杯" disabled readonly >
+                                            <br>
+                                            <br>
+                                            <input type="text"  name="small_price" >
+                                            <input type="text"  name="medium_price" >
+                                            <input type="text"  name="big_price" >
+                                            <input type="text"  name="superbig_price" >                                                                                      
+                                        </div>
+                        
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <div class="mb-3">
+                                        <label for="product_introduction" class="form-label">產品價格</label>
+                                        <br>
+                                        <input type="text" id="product_sizes" value="每份" disabled readonly >
+                                        <br>
+                                        <br>
+                                        <input type="text"  name="bottle_price" >                                                                                             
+                                    </div>
+                                </tbody>
+                                
+                            </table>
+                        </div>                                
+                    </div>
+                </div>
+
+                <div class="row">
+                    <button type="submit" class="btn btn-primary">確定並返回</button>
+                    <div class="right col-1">
+                        <a href="/" class="btn btn-primary"> 返回</a>
+                    </div>
+                </div>
+
+                
+            </form>
+
+            
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content%}

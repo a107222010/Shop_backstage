@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+<div class="pcoded-content">
+  <div class="pcoded-inner-content">
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li class="brand-text font-weight-light">
+          <font size='10'>會員列表</font>
+        </li>
+      </ol>
+    </section>
+    <div class="row">
+      <div >
+        <form action="/member">
+          <div class="input-group rounded">
+            <input type="text" name="search" class="form-control" placeholder="Search"/>
+            <button type="submit" class="btn btn-primary" value="Search">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+      <div class="main-body">
+          <div class="page-wrapper">
+              <div class="row">
+                <table class="table table-striped table-hover table-bordered mt-3" style="table-layout:fixed;width:100%" >
+                  <thead>
+                    <tr>
+                      <th width="7%" style="font-weight:bold;text-align:center;">會員帳號</th>
+                      <th width="5%">會員名稱</th>
+                      <th width="7%">會員電話</th>
+                      <th width="10%" style="font-weight:bold;text-align:center;">會員地址</th>
+                      <th width="8%"style="font-weight:bold;text-align:center;">會員e-mail</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body-box" class="table-hover">
+                    {% for members in member %}
+                    <tr>
+                      <td style="vertical-align: middle !important;text-align: left;">
+                        <font size="4">{{ members.guest_account }}</font>
+                      </td>
+                      <td style="vertical-align: middle !important;text-align: left;   word-wrap:break-word;word-break:break-all;white-space:normal;">
+                        <font size="4">{{ members.guest_name }}</td></font>                      
+                      <td style="vertical-align: middle !important;text-align: left;">
+                        <font size="4">{{ members.guest_phone }}</font>
+                      </td>                     
+                      <td style="vertical-align: middle !important;text-align: left;">
+                        <font size="4">{{ members.guest_address}}</font>
+                      </td>                     
+                      <td style="vertical-align: middle !important;text-align: left; word-wrap:break-word;word-break:break-all;white-space:normal;">
+                        <font size="4">{{ members.guest_mail}}</font>
+                      </td>                                     
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <div class="pagination offset-sm-4">
+                  {% if member.has_previous %}
+            
+                    <a class = "pagination-action" href="?page=1">
+                      <i class="fas fa-angle-double-left"></i>
+                    </a>
+                    <a class = "pagination-action" href="?page={{ member.previous_page_number }}">
+                      <i class="fas fa-angle-left"></i>
+                    </a>                    
+                  {% endif %}
+            
+                  {% for num in member.paginator.page_range %}
+            
+                    {% if member.number == num %}
+                      <span class="pagination-number pagination-current">{{ num }}</span>
+                    {% elif num > member.number|add:'-2' and num < member.number|add:'2' %}
+                      <a class="pagination-number" href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+            
+                  {% endfor %}
+            
+                  {% if member.has_next %}
+                    
+                    <a class = "pagination-action" href="?page={{ member.next_page_number }}">
+                      <i class = "fas fa-angle-right"></i>
+                    </a>
+                    <a class = "pagination-action" href = "?page={{ member.paginator.num_pages }}">
+                      <i class="fas fa-angle-double-right"></i>
+                    </a>
+                    
+                  {% endif %}
+                </div>   
+              </div>
+              <!-- [ Main Content ] end -->
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+{% endblock content%}

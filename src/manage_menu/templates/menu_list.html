@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"></script>
+{% block content%}
+
+<div class="pcoded-content">
+  <div class="pcoded-inner-content">
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li class="brand-text font-weight-light">
+          <font size='10'>商品列表</font>
+        </li>
+      </ol>
+    </section>
+    <div class="row">
+      <div >
+        <form action="">
+          <div class="input-group rounded">
+            <input type="text" name="search" class="form-control" placeholder="Search"/>
+            <button type="submit" class="btn btn-primary" value="Search">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+      <div class="main-body">
+          <div class="page-wrapper">
+              <div class="row">
+                <table class="table table-striped table-hover table-bordered mt-3" style="table-layout:fixed;width:100%" >
+                  <thead>
+                    <tr>
+                      <th width="7%" style="font-weight:bold;text-align:center;">產品ID</th>
+                      <th style="font-weight:bold;text-align:center;">產品名稱</th>
+                      <th style="font-weight:bold;text-align:center;">產品分類</th>
+                      <th width="20%" style="font-weight:bold;text-align:center;">選擇產品圖片</th>
+                      <th width="8%"style="font-weight:bold;text-align:center;">加料分類</th>
+                      <th style="font-weight:bold;text-align:center;">產品介紹</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body-box" class="table-hover">
+                    {% for menu in saverecord %}
+                    <tr>
+                      <td style="vertical-align: middle !important;text-align: left;">
+                        {% if  request.user.is_staff %}
+                        <a href="/product_manage/{{menu.product_id}}">{{ menu.product_id }}</a>
+                        {% else%}
+                        <p >{{ menu.product_id }}</p>
+                        {% endif%}
+                      </td>
+                      <td style="vertical-align: middle !important;text-align: left;   word-wrap:break-word;word-break:break-all;white-space:normal;">
+                        <font size="4">{{ menu.product_name }}
+                      </td>
+                      </font>
+                      <td style="vertical-align: middle !important;text-align: left;">
+                        <font size="4">{{ menu.product_sort }}
+                      </td>
+                      </font>
+                      <td style="word-wrap:break-word;word-break:break-all;white-space:normal;">
+                        <img src="/media/{{menu.product_pic}}" width=220px><br>{{ menu.product_pic }}
+                      </td>
+                      <td style="vertical-align: middle !important;text-align: left;">
+                        <font size="4">{{ menu.product_add}}
+                      </td>
+                      </font>
+                      <td style="vertical-align: middle !important;text-align: left; word-wrap:break-word;word-break:break-all;white-space:normal;">
+                        <font size="4">{{ menu.product_introduction}}
+                      </td>
+                      </font>
+                
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <div class="pagination offset-sm-4">
+                  {% if saverecord.has_previous %}
+            
+                    <a class = "pagination-action" href="?page=1">
+                      <i class="fas fa-angle-double-left"></i>
+                    </a>
+                    <a class = "pagination-action" href="?page={{ saverecord.previous_page_number }}">
+                      <i class="fas fa-angle-left"></i>
+                    </a>                    
+                  {% endif %}
+            
+                  {% for num in saverecord.paginator.page_range %}
+            
+                    {% if saverecord.number == num %}
+                      <span class="pagination-number pagination-current">{{ num }}</span>
+                    {% elif num > saverecord.number|add:'-2' and num < saverecord.number|add:'2' %}
+                      <a class="pagination-number" href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+            
+                  {% endfor %}
+            
+                  {% if saverecord.has_next %}
+                    
+                    <a class = "pagination-action" href="?page={{ saverecord.next_page_number }}">
+                      <i class = "fas fa-angle-right"></i>
+                    </a>
+                    <a class = "pagination-action" href = "?page={{ saverecord.paginator.num_pages }}">
+                      <i class="fas fa-angle-double-right"></i>
+                    </a>
+                    
+                  {% endif %}
+                </div>   
+              </div>
+              <!-- [ Main Content ] end -->
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+{% endblock content%}

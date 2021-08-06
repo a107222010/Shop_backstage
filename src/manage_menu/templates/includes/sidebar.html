@@ -1,0 +1,69 @@
+
+    <nav class="pcoded-navbar">
+        <div class="navbar-wrapper">
+            <div class="navbar-brand header-logo">
+                <a href="/" class="b-brand">
+                    <div class="b-bg">
+                        <i class="feather icon-trending-up"></i>
+                    </div>
+                    <span class="b-title">飲料店管理系統</span>
+                </a>
+                <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+            </div>
+            <div class="navbar-content scroll-div">
+                <ul class="nav pcoded-inner-navbar">
+                    <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" 
+                        class="nav-item {% if 'index' in segment %} active {% endif %}">
+                        <a href="/menu_list" class="nav-link "><span class="pcoded-micon"><i class="fas fa-home"></i></span><span class="pcoded-mtext">商品列表</span></a>
+                    </li>
+                    {% if  request.user.is_staff %}
+                    <li data-username="form elements advance componant validation masking wizard picker select" 
+                        class="nav-item {% if 'ui-forms' in segment %} active {% endif %}">
+                        <a href="/insertmenu" class="nav-link "><span class="pcoded-micon"><i class="fas fa-cart-plus"></i></span><span class="pcoded-mtext">商品新增</span></a>
+                    </li>
+                    {% endif %}
+                    <li data-username="Table bootstrap datatable footable" 
+                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+                        <a href="/order" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">訂單管理</span></a>
+                    </li>
+                    {% if  request.user.is_staff %}
+                    <li data-username="Table bootstrap datatable footable" 
+                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+                        <a href="/plus" class="nav-link "><span class="pcoded-micon"><i class="fas fa-wrench"></i></span><span class="pcoded-mtext">配料修正</span></a>
+                    </li>
+                    {% endif %}
+                    <li data-username="Table bootstrap datatable footable" 
+                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+                        <a href="/comment" class="nav-link "><span class="pcoded-micon"><i class="far fa-comment-dots"></i></span><span class="pcoded-mtext">評論</span></a>
+                    </li>
+                    <li data-username="Table bootstrap datatable footable" 
+                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+                        <a href="/edit_password" class="nav-link "><span class="pcoded-micon"><i class="fas fa-unlock-alt"></i></span><span class="pcoded-mtext">修改密碼</span></a>
+                    </li>
+                    {% if  request.user.is_staff %}
+                    <li data-username="Table bootstrap datatable footable" 
+                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+                        <a href="/member" class="nav-link "><span class="pcoded-micon"><i class="fas fa-user"></i></span><span class="pcoded-mtext">會員</span></a>
+                    </li>
+                    {% endif %}
+                    {% if  request.user.is_staff %}
+                    <li data-username="Table bootstrap datatable footable" 
+                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+                        <a href="/advertise" class="nav-link "><span class="pcoded-micon"><i class="fas fa-plus-square"></i></span><span class="pcoded-mtext">新增輪播廣告</span></a>
+                    </li>
+                    {% endif %}
+                    {% if  request.user.is_staff %}
+                    <li data-username="Table bootstrap datatable footable" 
+                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+                        <a href="/banner" class="nav-link "><span class="pcoded-micon"><i class="fab fa-adversal"></i></span><span class="pcoded-mtext">目前輪播廣告</span></a>
+                    </li>
+                    {% endif %}
+                    <li data-username="Disabled Menu" class="nav-item">
+                        <a href="../../../../../logout" class="nav-link">
+                            <span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">登出</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>

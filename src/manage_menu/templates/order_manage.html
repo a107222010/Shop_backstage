@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <div class="main-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for list in saverecord %}
+                
+                <div class="mb-3">
+                    <label for="order_id" class="form-label">訂單ID</label>
+                    <input type="text" class="form-control" id="product_id" name="order_id" value="{{list.0}}" readonly>        
+                </div>
+                <div class="mb-3">
+                    <label for="guest_account" class="form-label">購買者</label>
+                    <input type="text" class="form-control" id="guest_account" placeholder="請輸入購買者名稱" name="guest_account" value="{{list.1}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="order_date" class="form-label">訂購日期</label>
+                    <input type="text" class="form-control" id="order_date" placeholder="請輸入訂購日期" name="order_date" value="{{list.2|date:"Y-m-d H:i:s"}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="product_name" class="form-label">商品名稱</label>
+                    <input type="text" class="form-control" id="product_name" placeholder="請輸入商品名稱" name="product_name" value="{{list.4}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="detail_quantity" class="form-label">數量</label>
+                    <input type="text" class="form-control" id="detail_quantity"  placeholder="請輸入數量" name="detail_quantity" value="{{list.7}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="product_size" class="form-label">大小</label>
+                    <input type="text" class="form-control" id="product_size"  placeholder="請輸入大小" name="product_size" value="{{list.8}}" readonly>
+                </div>
+                <div class="mb-3">
+                    {% if not list.9 %}                    
+                    {% else %}
+                    <label for="ice_name" class="form-label">冰度</label>
+                    <input type="text" class="form-control" id="ice_name"  placeholder="請輸入冰度" name="ice_name" value="{{list.9}}" readonly>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {% if not list.10 %}
+                    {% else %}
+                    <label for="sugar_name" class="form-label">糖度</label>
+                    <input type="text" class="form-control" id="sugar_name"  placeholder="請輸入糖度" name="sugar_name" value="{{list.10}}" readonly>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {% if not list.11%}
+                    {% else %}
+                    <label for="coffee_plus_name" class="form-label">咖啡是否加量</label>
+                    <input type="text" class="form-control" id="coffee_plus_name"  placeholder="請輸入咖啡是否加量" name="coffee_plus_name" value="{{list.11}}" readonly>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="add_other" class="form-label">其餘要求</label>
+                    <input type="text" class="form-control" id="add_other"  placeholder="無" name="add_other" value="{{list.12}}" readonly>
+                </div> 
+                
+                
+                {% for list1 in saverecord1%}
+                <div class="row g-3">
+                    <div class="col-sm">
+                    <label for="plus" class="form-label">加的配料-{{ forloop.counter }}</label>
+                    <input type="text" class="form-control" id="plus"  placeholder="請輸入其餘要求" name="plus" value="{{list1.0}}" readonly>
+                    </div>
+                    <div class="col-sm">
+                    <label for="plus" class="form-label">價格</label>
+                    <input type="text" class="form-control" id="plus"  placeholder="請輸入其餘要求" name="plus" value="{{list1.1}}" readonly>
+                    </div>
+                </div>
+                {% endfor %}
+                <hr/>
+                <div class="mb-3">
+                    <label for="detail_price" class="form-label"><font size="5" color="red">訂單價格</font></label>
+                    <input type="text" class="form-control" id="detail_price"  placeholder="請輸入價格" name="detail_price" value="{{list.6}}" readonly>
+                </div>
+                {% endfor %}
+                <br>
+                <button type="submit" class="btn btn-primary">儲存並返回</button>
+                {% for i in saverecord%}
+                <a href="/order_manage/order_fix/{{ i.5 }}/{{ i.0 }}/{{ i.13 }}" class="btn btn-primary">修改</a>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+</div>   
+
+{% endblock %}
