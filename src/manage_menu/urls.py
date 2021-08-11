@@ -15,14 +15,31 @@ urlpatterns =[
     path('edit_password', views.editPassword),
     path('member', views.member),
     
-    path('ice_plus', views.ice_plus),
-    path('sugar_plus', views.sugar_plus),
-    path('coffee_plus', views.coffee_plus),
-    path('plus', views.plus),
+    path('plus',views.plus),
+    
+    path('singleplus1', views.singleplus1),
+    path('singleplus1_edit/<pk>', views.singleplus1_edit),
+
+    path('singleplus2', views.singleplus2),
+    path('singleplus2_edit/<pk>', views.singleplus2_edit),
+    
+    path('singleplus3', views.singleplus3),
+    path('singleplus3_edit/<pk>', views.singleplus3_edit),
+
+
+    path('multi_plus', views.multi_plus),
+    path('multi_plus_edit/<pk>', views.multi_plus_edit),
+
     path('product_type', views.product_type),
+    path('product_type_edit/<pk>', views.product_type_edit),
+
+
+    path('product_case', views.product_case),
+    path('product_case_edit/<str:product_case>', views.product_case_edit),
 
     path('advertise',views.advertise),
     path('shop_photo',views.shop_photo),
     path('banner',views.banner),
+    path('edit_banner/<pk>',views.edit_banner),
 ]
 

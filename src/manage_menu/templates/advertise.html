@@ -11,7 +11,7 @@
                                 <h5>廣告輪播調整</h5>
                             </div>
                             <form method="POST" action="/advertise" enctype="multipart/form-data">
-                                <div id="plus">
+                                <div>
                                     {% csrf_token %}
                                     <div class="mb-3">
                                         <label for="ad_title" class="form-label">廣告標題</label>
@@ -28,9 +28,18 @@
                                             name="ad_url" required>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">送出</button>
+                                <div style="text-align:right">
+                                    <button type="submit" class="btn btn-primary">送出</button>
+                                </div>
                             </form>
                         </div>
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {% if message.tags %} {{ message }} {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
                         <div class="card Recent-Users">
                             <div class="card-header">
                                 <h5>店家形象圖片調整</h5>
@@ -40,12 +49,16 @@
                                     {% csrf_token %}
                                     <div class="mb-3">
                                         <label for="shop_photo" class="form-label">商店形象照</label>
-                                        <input type="file" class="form-control" id="shop_photo" name="shop_photo" required>
+                                        <input type="file" class="form-control" id="shop_photo" name="shop_photo"
+                                            required>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">送出</button>
+                                <div style="text-align:right">
+                                    <button type="submit" class="btn btn-primary">送出</button>
+                                </div>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>

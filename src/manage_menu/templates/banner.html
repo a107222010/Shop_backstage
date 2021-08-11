@@ -18,6 +18,8 @@
                                         <li data-target="#carousel-demo" data-slide-to="0" class="active"></li>
                                         <li data-target="#carousel-demo" data-slide-to="1"></li>
                                         <li data-target="#carousel-demo" data-slide-to="2"></li>
+                                        <li data-target="#carousel-demo" data-slide-to="3"></li>
+                                        <li data-target="#carousel-demo" data-slide-to="4"></li>
 
                                     </ol>
                                     <div class="carousel-inner">
@@ -79,70 +81,25 @@
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" value="{{ ad.title }}"
-                                                                            name="banner_title"
-                                                                            readonly>
+                                                                            name="banner_title" readonly>
                                                                     </td>
                                                                     <td>
-                                                                        <input type="text" 
-                                                                            value="{{ ad.photo }}"
+                                                                        <input type="text" value="{{ ad.photo }}"
                                                                             readonly>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" value="{{ ad.URL }}"
-                                                                            name="banner_URL"
-                                                                            readonly>
-                                                                    </td>
-                                                                    <td align="center">
-                                                                        <input type="checkbox" value="{{ ad.title }}"
-                                                                            name="banner_delete" >
+                                                                            name="banner_URL" readonly>
                                                                     </td>
                                                                     <td>
-                                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit{{forloop.counter}}">
-                                                                            修改
-                                                                        </button>
+                                                                        <input type="checkbox" value="{{ ad.id }}"
+                                                                            name="banner_delete"
+                                                                            style="position: absolute; right:115px;">
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/edit_banner/{{ ad.id }}">修改</a>
                                                                     </td>
                                                                 </tr>
-                                                                <div class="modal fade" id="edit{{ forloop.counter }}" role="dialog" tabindex="-1">
-                                                                    <div class="modal-dialog " role="document">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title" id="exampleModalLabel">確定更改?</h5>
-                                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                                    aria-label="Close"><span
-                                                                                        aria-hidden="true">×</span></button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                <form>
-                                                                                    <input type="text" class="form-control" name="edit_id" value="{{ ad.id }}" style="display: none" readonly>
-                                                                                    <div class="mb-3">
-                                                                                      <label for="edit_title" class="col-form-label">廣告標題:</label>
-                                                                                      <input type="text" class="form-control" name="edit_title" value="{{ ad.title }}">
-                                                                                    </div>
-                                                                                    <div class="mb-3">
-                                                                                        <label for="edit_photo" class="col-form-label">廣告圖片:</label>
-                                                                                        <input type="text" class="form-control" name="edit_photo" value="{{ ad.photo }}">
-                                                                                        <label for="edit_chosephoto" class="col-form-label">更換廣告圖片:</label>
-                                                                                        <input type="file" class="form-control" name="edit_chosephoto{{ forloop.counter }}">
-                                                                                      </div>
-                                                                                    <div class="mb-3">
-                                                                                      <label for="edit_URL" class="col-form-label">廣告連結:</label>
-                                                                                      <input type="text" class="form-control" name="edit_URL" value="{{ ad.URL }}">
-                                                                                    </div>
-                                                                                  </form>
-                                                                                <label>確定新增 <span
-                                                                                        style="color:rgb(0, 0, 255);">{{saverecord.product_name}}</span>
-                                                                                    相關資訊嗎?</label>
-                        
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button class="btn btn-light" type="button"
-                                                                                    data-dismiss="modal">返回</button>
-                                                                                <button class="btn btn-primary" type="submit"
-                                                                                    name="edit">確定並返回</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
                                                                 {% endfor %}
                                                             </tbody>
                                                         </table>
@@ -151,8 +108,8 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        
-                                        
+
+
                                         <div style="text-align:right" ;>
                                             <button class="btn btn-primary" type="submit">確定</button>
                                         </div>

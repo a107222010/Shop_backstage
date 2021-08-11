@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Customized, OrderDetail, Product, ProductSize, ProductAddrule, ShopDetail, Sort, Comment, Singleplus1, Singleplus2, Singleplus3, Multipleplus,DrinkOrder,CustomizedPlus,Guest, Advertise
+from .models import Customized, OrderDetail, Product, ProductSize,Advertise,TableUnit,ProductCase
+from .models import ShopDetail, Sort, Comment, Singleplus1, Singleplus2, Singleplus3, Multipleplus,DrinkOrder,CustomizedPlus,Guest
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.db.models import Q
@@ -12,7 +13,7 @@ from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from django.db.models import Avg, Sum, Count
 import pandas as pd
-
+from django.contrib import messages
 
 @login_required
 def chart(request):
@@ -61,14 +62,11 @@ def chart(request):
     return render(request, 'chart.html',context)
 
 
-
 @login_required
 def menu_list(request):
     user = request.user
 
-
     saverecord = Product.objects.using(user.username).all()
-
 
     paginator = Paginator(saverecord,5)
 
@@ -93,8 +91,11 @@ def menu_list(request):
 def InsertMenu(request):
     user = request.user 
 
-    
-    saverecord_addrule = ProductAddrule.objects.using(user.username).all()
+    productcase = ProductCase.objects.using(user.username).values_list('product_add', flat=True).order_by('product_add').distinct()
+    saverecord_addrule = []
+    for case in productcase:
+        saverecord_addrule.append(case)
+
     sort = Sort.objects.using(user.username).all()
 
     if request.method == 'POST':
@@ -155,16 +156,16 @@ def product_manage(request, pk):
     sort = Sort.objects.using(user.username).all()
     saverecord = Product.objects.using(user.username).get(pk=pk)
     saverecords = ProductSize.objects.using(user.username).filter(product_id=pk)
-    saverecord_addrule = ProductAddrule.objects.using(user.username).all()
+    # saverecord_addrule = ProductAddrule.objects.using(user.username).all()
 
     product_size = []
     product_price = []
     productsize_id = []
     product_addrule = []
 
-    for add_rule in saverecord_addrule:
-        product_add = add_rule.product_add
-        product_addrule.append(product_add)
+    # for add_rule in saverecord_addrule:
+    #     product_add = add_rule.product_add
+    #     product_addrule.append(product_add)
 
     for x in saverecords:
         
@@ -240,9 +241,6 @@ def order(request):
     if 'search' in request.GET:
         search=request.GET['search']
         saverecord = DrinkOrder.objects.using(user.username).filter(Q(order_id__icontains=search)|Q(Guest__guest_account__icontains=search))
-        # cursor = connection.cursor()
-        # cursor.execute('SELECT DISTINCT drink_order.*,product.product_name,order_detail.detail_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id where drink_order.order_id = %s ORDER BY drink_order.order_date ASC',[search])
-        # saverecord = cursor.fetchall()
 
         if not request.GET['search']:
             cursor = connections[user.username].cursor()
@@ -269,7 +267,6 @@ def order_manage(request,id,detail_id):
     
     cursor = connections[user.username].cursor()   
     cursor.execute('SELECT DISTINCT drink_order.*,product.product_name, order_detail.detail_id, order_detail.detail_price,order_detail.detail_quantity,product_size.product_size,singleplus_1.name ,singleplus_2.name, singleplus_3.name, customized.add_other, product.product_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id left join customized on customized.customized_id = order_detail.customized_id left join singleplus_1 on customized.sp1_number = singleplus_1.number left join singleplus_2 on customized.sp2_number = singleplus_2.number left join singleplus_3 on customized.sp3_number = singleplus_3.number where drink_order.order_id = %s and order_detail.detail_id = %s ORDER BY drink_order.order_date ASC',[id,detail_id])
-    # cursor.execute('SELECT DISTINCT drink_order.*,product.product_name, order_detail.detail_id, order_detail.detail_price,order_detail.detail_quantity,product_size.product_size,ice.name AS ice_name,sugar.name as sugar_name, coffee_plus.name as coffee_plus_name, customized.add_other, product.product_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id left join customized on customized.customized_id = order_detail.customized_id left join ice on customized.ice_id = ice.number left join sugar on customized.sugar_id = sugar.number left join coffee_plus on customized.coffeebeans_id = coffee_plus.number where drink_order.order_id = %s and order_detail.detail_id = %s ORDER BY drink_order.order_date ASC',[id,detail_id])
     saverecord = cursor.fetchall()
 
     cursor1 = connections[user.username].cursor()
@@ -429,7 +426,7 @@ def member(request):
 
     user = request.user
     
-    member = Guest.objects.using(user.username).all()
+    member = Guest.objects.all()
 
     paginator = Paginator(member,7)
 
@@ -439,7 +436,7 @@ def member(request):
 
     if 'search' in request.GET:
         search=request.GET['search']
-        member = Guest.objects.using(user.username).filter(Q(guest_account=search)|Q(guest_name=search)|Q(guest_phone=search))
+        member = Guest.objects.filter(Q(guest_account=search)|Q(guest_name=search)|Q(guest_phone=search))
         
         if not request.GET['search']:
             return redirect('/member')
@@ -458,15 +455,7 @@ def comment(request):
 
     if 'search' in request.GET:
         search=request.GET['search']
-        search = search + ''
-        comment = Comment.objects.using(user.username).filter(Q(detail_id=search)|Q(guest_account=search))
-        # comment = Comment.objects.all().order_by('detail_id__detail_id')
-        # comment = Comment.objects.filter(detail_id = search)
-        
-        # search=request.GET['search']
-        # cursor = connection.cursor()
-        # cursor.execute('SELECT `detail_id`, `guest_account`, `comment`, `comment_score` FROM `comment` WHERE detail_id = %s OR guest_account = %s',[search,'search'])
-        # comment = cursor.fetchall()
+        comment = Comment.objects.using(user.username).filter(Q(detail__detail_id=search)|Q(guest_account=search))
         
         if not request.GET['search']:
             return redirect('/comment')
@@ -474,257 +463,405 @@ def comment(request):
     return render(request, 'comment.html',{'comment':comment})
 
 @login_required
-def ice_plus(request):
+def plus(request):
 
     user = request.user
     
+    tableunit = TableUnit.objects.using(user.username).all()
     singleplus1 = Singleplus1.objects.using(user.username).all()
     singleplus2 = Singleplus2.objects.using(user.username).all()
     singleplus3 = Singleplus3.objects.using(user.username).all()
     multipleplus = Multipleplus.objects.using(user.username).all()
     sort = Sort.objects.using(user.username).all()
 
+    cursor = connections[user.username].cursor()
+    cursor.execute('SELECT product_add ,GROUP_CONCAT(product_case.plus_id ORDER BY product_case.plus_id) AS plus_id, GROUP_CONCAT(table_unit.Unit) AS plus_id_cn,hide\
+                    FROM product_case \
+                    INNER JOIN table_unit ON product_case.plus_id = table_unit.ID\
+                    GROUP BY product_case.product_add')
 
+    unit_name=[]
+    for tu in tableunit:
+        unit_name.append(tu.unit)
+     
+
+    context = {
+        'singleplus1':singleplus1,
+        'singleplus2':singleplus2,
+        'singleplus3':singleplus3,
+        'multipleplus':multipleplus,
+        'sort':sort,
+        'unit_name':unit_name,
+        'cursor':cursor,
+
+    }
+    return render(request,'plus.html',context)
+
+
+@login_required
+def singleplus1(request):
+
+    user = request.user
+    singleplus1 = Singleplus1.objects.using(user.username).all()  
+    
     if request.method == 'POST':
 
-        ice_number = request.POST.getlist('ice_number')
-        ice_name = request.POST.getlist('ice_name')
-        ice_price = request.POST.getlist('ice_price')
         ice_delete = request.POST.getlist('ice_delete')
 
         for delete in ice_delete:
-            cursor2 = connections[user.username].cursor()
-            # cursor2.execute('DELETE FROM `singleplus_1` WHERE number = %s',[delete])            
-            cursor2.execute('UPDATE `singleplus_1` SET `number`=%s,`hide`=1 WHERE number = %s ',[delete,delete])            
-
-        for x in range(len(ice_number)):
-            cursor = connections[user.username].cursor()
-            cursor.execute('UPDATE `singleplus_1` SET `name`= %s ,`price`= %s WHERE `number` = %s',[ice_name[x],ice_price[x],ice_number[x]])
+            Singleplus1.objects.using(user.username).filter(number=delete).update(hide=1)       
             
+        new_single1name = request.POST.get('new_single1name')
+        new_single1price = request.POST.get('new_single1price')
 
-        plus_name = request.POST.getlist('name')
-        price = request.POST.getlist('price')
-        for i in range(len(plus_name)):
-            if Singleplus1.objects.using(user.username).filter(name=plus_name[i]):
-                cursor3 = connections[user.username].cursor()
-                cursor3.execute('UPDATE `singleplus_1` SET `name`=%s,`price`=%s,`hide`=0 WHERE name = %s',[plus_name[i],price[i],plus_name[i]])
-            else:
-                cursor1 = connections[user.username].cursor()
-                cursor1.execute('INSERT INTO `singleplus_1`(`name`, `price`) VALUES (%s,%s)',[plus_name[i],price[i]])
+        if 'insert_single1' in request.POST:
+            Singleplus1.objects.using(user.username).create(name=new_single1name,price=new_single1price,hide=0)
+
+        return redirect('/plus')
 
     context = {
         'singleplus1':singleplus1,
-        'singleplus2':singleplus2,
-        'singleplus3':singleplus3,
-        'multipleplus':multipleplus,
-        'sort':sort,
     }  
 
     return render(request, 'plus.html',context)
-    
+
 @login_required
-def sugar_plus(request):
+def singleplus1_edit(request,pk):
 
     user = request.user
-        
-    singleplus1 = Singleplus1.objects.using(user.username).all()
-    singleplus2 = Singleplus2.objects.using(user.username).all()
-    singleplus3 = Singleplus3.objects.using(user.username).all()
-    multipleplus = Multipleplus.objects.using(user.username).all()
-    sort = Sort.objects.using(user.username).all()
+    singleplus1 = Singleplus1.objects.using(user.username).filter(number=pk)
+
+    tableunit = TableUnit.objects.using(user.username).all()
+    unit_name=[]
+    for tu in tableunit:
+        unit_name.append(tu.unit)
 
     if request.method == 'POST':
-
-        sugar_number = request.POST.getlist('sugar_number')
-        sugar_name = request.POST.getlist('sugar_name')
-        sugar_price = request.POST.getlist('sugar_price')
-        sugar_delete = request.POST.getlist('sugar_delete')
-
-        for delete in sugar_delete:
-            cursor2 = connections[user.username].cursor()
-            # cursor.execute('DELETE FROM `singleplus_2` WHERE number = %s',[delete])
-            cursor2.execute('UPDATE `singleplus_2` SET `number`= %s,`hide`=1 WHERE number = %s',[delete,delete])
-
-
-        for x in range(len(sugar_number)):
-            cursor = connections[user.username].cursor()
-            cursor.execute('UPDATE `singleplus_2` SET `name`= %s ,`price`= %s WHERE `number` = %s',[sugar_name[x],sugar_price[x],sugar_number[x]])
-
-
-        plus_name = request.POST.getlist('name')
-        price = request.POST.getlist('price')
-        for i in range(len(plus_name)):
-            if Singleplus2.objects.using(user.username).filter(name=plus_name[i]):
-                cursor3 = connections[user.username].cursor()
-                cursor3.execute('UPDATE `singleplus_2` SET `name`=%s,`price`=%s,`hide`=0 WHERE name = %s',[plus_name[i],price[i],plus_name[i]])
-            else:
-                cursor1 = connections[user.username].cursor()
-                cursor1.execute('INSERT INTO `singleplus_2`(`name`, `price`) VALUES (%s,%s)',[plus_name[i],price[i]])
+        edit_single1name = request.POST.get('edit_single1name')
+        edit_single1price = request.POST.get('edit_single1price')
         
+        Singleplus1.objects.using(user.username).filter(number=pk).update(name=edit_single1name,price=edit_single1price)
+
+        return redirect('/plus')
 
     context = {
         'singleplus1':singleplus1,
+        'unit_name':unit_name
+    } 
+
+    return render(request,'singleplus1_edit.html',context)
+
+@login_required
+def singleplus2(request):
+
+    user = request.user
+    singleplus2 = Singleplus2.objects.using(user.username).all()  
+    
+    if request.method == 'POST':
+
+        single2_delete = request.POST.getlist('single2_delete')
+
+        for delete in single2_delete:
+            Singleplus2.objects.using(user.username).filter(number=delete).update(hide=1)       
+            
+        new_single1name = request.POST.get('new_single2name')
+        new_single1price = request.POST.get('new_single2price')
+
+        if 'insert_single2' in request.POST:
+            Singleplus2.objects.using(user.username).create(name=new_single1name,price=new_single1price,hide=0)
+
+        return redirect('/plus')
+        
+
+    context = {
         'singleplus2':singleplus2,
-        'singleplus3':singleplus3,
-        'multipleplus':multipleplus,
-        'sort':sort,
     }    
     
 
     return render(request, 'plus.html',context)
 
 @login_required
-def coffee_plus(request):
+def singleplus2_edit(request,pk):
 
-    user = request.user  
+    user = request.user
+    singleplus2 = Singleplus2.objects.using(user.username).filter(number=pk)
 
-    singleplus1 = Singleplus1.objects.using(user.username).all()
-    singleplus2 = Singleplus2.objects.using(user.username).all()
-    singleplus3 = Singleplus3.objects.using(user.username).all()
-    multipleplus = Multipleplus.objects.using(user.username).all()
-    sort = Sort.objects.using(user.username).all()
+    tableunit = TableUnit.objects.using(user.username).all()
+    unit_name=[]
+    for tu in tableunit:
+        unit_name.append(tu.unit)
 
     if request.method == 'POST':
+        edit_single2name = request.POST.get('edit_single2name')
+        edit_single2price = request.POST.get('edit_single2price')
+        
+        Singleplus2.objects.using(user.username).filter(number=pk).update(name=edit_single2name,price=edit_single2price)
 
-        coffeeplus_number = request.POST.getlist('coffeeplus_number')
-        coffeeplus_name = request.POST.getlist('coffeeplus_name')
-        coffeeplus_price = request.POST.getlist('coffeeplus_price')
-        coffeeplus_delete = request.POST.getlist('coffeeplus_delete')
-
-        for delete in coffeeplus_delete:
-            cursor2 = connections[user.username].cursor()
-            # cursor2.execute('DELETE FROM `singleplus_3` WHERE number = %s',[delete])
-            cursor2.execute('UPDATE `singleplus_3` SET `number`= %s,`hide`=1 WHERE number = %s',[delete,delete])
-
-
-        for x in range(len(coffeeplus_number)):
-            cursor = connections[user.username].cursor()
-            cursor.execute('UPDATE `singleplus_3` SET `name`= %s ,`price`= %s WHERE `number` = %s',[coffeeplus_name[x],coffeeplus_price[x],coffeeplus_number[x]])
-
-
-        plus_name = request.POST.getlist('name')
-        price = request.POST.getlist('price')
-        for i in range(len(plus_name)):
-            if Singleplus3.objects.using(user.username).filter(name=plus_name[i]):
-                cursor3 = connections[user.username].cursor()
-                cursor3.execute('UPDATE `singleplus_3` SET `name`=%s,`price`=%s,`hide`=0 WHERE name = %s',[plus_name[i],price[i],plus_name[i]])
-            else:
-                cursor1 = connections[user.username].cursor()
-                cursor1.execute('INSERT INTO `singleplus_3`(`name`, `price`) VALUES (%s,%s)',[plus_name[i],price[i]])
+        return redirect('/plus')
 
     context = {
-        'singleplus1':singleplus1,
         'singleplus2':singleplus2,
+        'unit_name':unit_name
+    } 
+
+    return render(request,'singleplus2_edit.html',context)
+
+
+@login_required
+def singleplus3(request):
+
+    user = request.user
+    singleplus3 = Singleplus3.objects.using(user.username).all()  
+    
+    if request.method == 'POST':
+
+        single3_delete = request.POST.getlist('single3_delete')
+
+        for delete in single3_delete:
+            Singleplus3.objects.using(user.username).filter(number=delete).update(hide=1)       
+            
+        new_single3name = request.POST.get('new_single3name')
+        new_single3price = request.POST.get('new_single3price')
+
+        if 'insert_single3' in request.POST:
+            Singleplus3.objects.using(user.username).create(name=new_single3name,price=new_single3price,hide=0)
+
+        return redirect('/plus')
+        
+
+    context = {
         'singleplus3':singleplus3,
+    }    
+    
+
+    return render(request, 'plus.html',context)
+
+@login_required
+def singleplus3_edit(request,pk):
+
+    user = request.user
+    singleplus3 = Singleplus3.objects.using(user.username).filter(number=pk)
+
+    tableunit = TableUnit.objects.using(user.username).all()
+    unit_name=[]
+    for tu in tableunit:
+        unit_name.append(tu.unit)
+
+    if request.method == 'POST':
+        edit_single3name = request.POST.get('edit_single3name')
+        edit_single3price = request.POST.get('edit_single3price')
+        
+        Singleplus3.objects.using(user.username).filter(number=pk).update(name=edit_single3name,price=edit_single3price)
+
+        return redirect('/plus')
+
+    context = {
+        'singleplus3':singleplus3,
+        'unit_name':unit_name
+    } 
+
+    return render(request,'singleplus3_edit.html',context)
+
+@login_required
+def multi_plus(request):
+
+    user = request.user
+
+    multipleplus = Multipleplus.objects.using(user.username).all()
+    if request.method == 'POST':
+
+        multi_delete = request.POST.getlist('multi_delete')
+
+        for delete in multi_delete:
+            Multipleplus.objects.using(user.username).filter(number=delete).update(hide=1)       
+            
+        new_multiname = request.POST.get('new_multiname')
+        new_multiprice = request.POST.get('new_multiprice')
+
+        if 'insert_multi' in request.POST:
+            Multipleplus.objects.using(user.username).create(name=new_multiname,price=new_multiprice,hide=0)
+
+        return redirect('/plus')
+
+    context = {
         'multipleplus':multipleplus,
-        'sort':sort,
     }  
 
     return render(request, 'plus.html',context)
 
 @login_required
-def plus(request):
+def multi_plus_edit(request,pk):
 
     user = request.user
+    multipleplus = Multipleplus.objects.using(user.username).filter(number=pk)
 
-    singleplus1 = Singleplus1.objects.using(user.username).all()
-    singleplus2 = Singleplus2.objects.using(user.username).all()
-    singleplus3 = Singleplus3.objects.using(user.username).all()
-    multipleplus = Multipleplus.objects.using(user.username).all()
-    sort = Sort.objects.using(user.username).all()
+    tableunit = TableUnit.objects.using(user.username).all()
+    unit_name=[]
+    for tu in tableunit:
+        unit_name.append(tu.unit)
 
     if request.method == 'POST':
+        edit_multiname = request.POST.get('edit_multiname')
+        edit_multiprice = request.POST.get('edit_multiprice')
+        
+        Multipleplus.objects.using(user.username).filter(number=pk).update(name=edit_multiname,price=edit_multiprice)
 
-        plus_number = request.POST.getlist('plus_number')
-        plus_name = request.POST.getlist('plus_name')
-        plus_price = request.POST.getlist('plus_price')
-        plus_delete = request.POST.getlist('plus_delete')
-
-        for delete in plus_delete:
-            cursor2 = connections[user.username].cursor()
-            # cursor2.execute('DELETE FROM `multipleplus` WHERE number = %s',[delete])
-            cursor2.execute('UPDATE `multipleplus` SET `number`= %s,`hide`=1 WHERE number = %s',[delete,delete])
-            
-        for x in range(len(plus_number)):
-            cursor = connections[user.username].cursor()
-            cursor.execute('UPDATE `multipleplus` set `name`= %s ,`price`= %s WHERE `number` = %s',[plus_name[x],plus_price[x],plus_number[x]])
-
-        plus_name = request.POST.getlist('name')
-        price = request.POST.getlist('price')
-        for i in range(len(plus_name)):
-            if Multipleplus.objects.using(user.username).filter(name=plus_name[i]):
-                cursor3 = connections[user.username].cursor()
-                cursor3.execute('UPDATE `multipleplus` SET `name`=%s,`price`=%s,`hide`=0 WHERE name = %s',[plus_name[i],price[i],plus_name[i]])
-            else:
-                cursor1 = connections[user.username].cursor()
-                cursor1.execute('INSERT INTO `multipleplus`(`name`, `price`) VALUES (%s,%s)',[plus_name[i],price[i]])
+        return redirect('/plus')
 
     context = {
-        'singleplus1':singleplus1,
-        'singleplus2':singleplus2,
-        'singleplus3':singleplus3,
         'multipleplus':multipleplus,
-        'sort':sort,
-    }  
+        'unit_name':unit_name
+    } 
 
-    return render(request, 'plus.html',context)
+    return render(request,'multiplus_edit.html',context)
 
 @login_required
 def product_type(request):
 
     user = request.user
 
-    singleplus1 = Singleplus1.objects.using(user.username).all()
-    singleplus2 = Singleplus2.objects.using(user.username).all()
-    singleplus3 = Singleplus3.objects.using(user.username).all()
-    multipleplus = Multipleplus.objects.using(user.username).all()
     sort = Sort.objects.using(user.username).all()
-
     if request.method == 'POST':
 
-        sort_id = request.POST.getlist('producttype_id')
-        sort_type = request.POST.getlist('producttype_name')
-        sort_delete = request.POST.getlist('producttype_delete')
-        
-        for delete in sort_delete:
-            cursor2 = connections[user.username].cursor()
-            # cursor2.execute('DELETE FROM `sort` WHERE sort_id = %s',[delete])
-            cursor2.execute('UPDATE `sort` SET `sort_id`= %s,`hide`=1 WHERE sort_id = %s',[delete,delete])
+        producttype_delete = request.POST.getlist('producttype_delete')
 
-        for x in range(len(sort_type)):
-            cursor = connections[user.username].cursor()
-            cursor.execute('UPDATE `sort` SET `sort_type`= %s WHERE `sort_id` = %s',[sort_type[x],sort_id[x]])
+        for delete in producttype_delete:
+            Sort.objects.using(user.username).filter(number=delete).update(hide=1)       
+            
+        new_sortname = request.POST.get('new_sortname')
+        new_sortprice = request.POST.get('new_sortprice')
 
-        plus_name = request.POST.getlist('name')
-        for i in range(len(plus_name)):
-            if Sort.objects.using(user.username).filter(sort_type=plus_name[i]):
-                cursor3 = connections[user.username].cursor()
-                cursor3.execute('UPDATE `sort` SET `sort_type`=%s,`hide`=0 WHERE sort_type = %s',[plus_name[i],plus_name[i]])
-            else:
-                cursor1 = connections[user.username].cursor()
-                cursor1.execute('INSERT INTO `sort`(`sort_type`) VALUES (%s)',[plus_name[i]])
+        if 'insert_sort' in request.POST:
+            Sort.objects.using(user.username).create(name=new_sortname,price=new_sortprice,hide=0)
+
+        return redirect('/plus')
 
     context = {
-        'singleplus1':singleplus1,
-        'singleplus2':singleplus2,
-        'singleplus3':singleplus3,
-        'multipleplus':multipleplus,
         'sort':sort,
     }  
 
     return render(request, 'plus.html',context)
 
 @login_required
+def product_type_edit(request,pk):
+
+    user = request.user
+    sort = Sort.objects.using(user.username).filter(sort_id=pk)
+
+    tableunit = TableUnit.objects.using(user.username).all()
+    unit_name=[]
+    for tu in tableunit:
+        unit_name.append(tu.unit)
+
+    if request.method == 'POST':
+        edit_sorttype = request.POST.get('edit_sorttype')
+        
+        Sort.objects.using(user.username).filter(number=pk).update(type=edit_sorttype)
+
+        return redirect('/plus')
+
+    context = {
+        'sort':sort,
+        'unit_name':unit_name
+    } 
+
+    return render(request, 'product_type_edit.html')
+
+@login_required
+def product_case(request):
+
+    user = request.user
+
+    if request.method == 'POST':
+
+        product_addrule_delete = request.POST.getlist('product_addrule_delete')
+        for addrule_delete in product_addrule_delete:
+            ProductCase.objects.using(user.username).filter(product_add=addrule_delete).update(hide=1)
+
+        if 'product_addrule_return' in request.POST:
+            product_addrule = request.POST.get('product_addrule')
+            ProductCase.objects.using(user.username).filter(product_add=product_addrule).update(product_add=product_addrule,hide=0)
+
+
+        if 'insert' in request.POST:
+            new_addrule = request.POST.get('new_addrule')
+            new_check = request.POST.getlist('new_check')
+            
+            list4cn = []
+            for cn_list in new_check:
+                cn = TableUnit.objects.using(user.username).filter(unit=cn_list)
+                for cnn in cn:
+                    list4cn.append(cnn.id)       
+            
+            for x in range(len(list4cn)):
+                if ProductCase.objects.using(user.username).filter(product_add=new_addrule):
+                    messages.error(request, '命名重複，請修改命名')  
+                else:
+                    ProductCase.objects.using(user.username).create(product_add=new_addrule,plus_id=list4cn[x],hide=0)
+
+
+        return redirect('/plus')
+
+    return render(request, 'plus.html')
+
+@login_required
+def product_case_edit(request,product_case):
+    user = request.user
+
+    tableunit = TableUnit.objects.using(user.username).all()
+    add_cn=[]
+    for tu in tableunit:
+        add_cn.append(tu.unit)
+
+
+    unit_name = connections[user.username].cursor()
+    unit_name.execute('SELECT product_add ,GROUP_CONCAT(product_case.plus_id ORDER BY product_case.plus_id) AS plus_id, GROUP_CONCAT(table_unit.Unit) AS plus_id_cn\
+                    FROM product_case \
+                    INNER JOIN table_unit ON product_case.plus_id = table_unit.ID WHERE product_add = %s \
+                    GROUP BY product_case.product_add',[product_case])
+
+    if request.method == 'POST':
+        product_addrule_edit = request.POST.get('product_addrule_edit')
+        product_addrule_cn = request.POST.getlist('product_addrule_cn')
+
+        list4cn = []
+        for cn_list in product_addrule_cn:
+            cn = TableUnit.objects.using(user.username).filter(unit=cn_list)
+            for cnn in cn:
+                list4cn.append(cnn.id)
+
+        ProductCase.objects.using(user.username).filter(product_add=product_addrule_edit).delete()
+        for x in range(len(list4cn)):
+            ProductCase.objects.using(user.username).create(product_add=product_addrule_edit,plus_id=list4cn[x],hide=0)
+
+        return redirect('/plus')
+
+    context = {
+        'add_cn':add_cn,
+        'unit_name':unit_name
+    }
+
+    return render(request, 'product_case_edit.html',context)
+
+@login_required
 def advertise(request):
     
     user = request.user
-
+    advertise = Advertise.objects.using(user.username).all()
+    ad_length = []
+    for ad in advertise:
+        ad_length.append(ad)
+        
     if request.method == 'POST':
         
         ad_title = request.POST.get('ad_title')
         ad_photo = request.FILES['ad_photo'] 
         ad_url = request.POST.get('ad_url')
-        Advertise.objects.using(user.username).create(title=ad_title,photo=ad_photo,URL=ad_url)
+                
+        if len(ad_length) > 5:
+            messages.error(request, '限制最多只能5個，請刪除舊有選項以新增!')  
+        else:
+            Advertise.objects.using(user.username).create(title=ad_title,photo=ad_photo,URL=ad_url)
 
         return redirect('/advertise')
 
@@ -747,25 +884,10 @@ def banner(request):
 
     if request.method == 'POST':
 
-        if 'edit' in request.POST:
-            banner_id = request.POST.getlist('banner_id')
-            edit_title = request.POST.getlist('edit_title')
-            edit_chosephoto = request.FILES.get('edit_chosephoto')
-            edit_URL = request.POST.getlist('edit_URL')
-            
-        
-            for x in range(len(banner_id)):
-                print(x)
-                
-                print(edit_title)
-                # if banner_photo == None: 
-                    # Advertise.objects.using(user.username).filter(id=edit_id[x]).update(title=edit_title,photo=edit_chosephoto,URL=edit_URL)
-                # else:
-                    # Advertise.objects.using(user.username).filter(id=banner_id[x]).update(title=banner_title[x],photo=banner_photo[x],URL=banner_URL[x])
-        
         banner_delete = request.POST.getlist('banner_delete')
+
         for d in banner_delete:
-            delete = Advertise.objects.using(user.username).get(title=banner_delete[d])
+            delete = Advertise.objects.using(user.username).get(id=d)
             delete.delete()
     
 
@@ -774,3 +896,27 @@ def banner(request):
     }
 
     return render(request, 'banner.html',context)
+
+@login_required
+def edit_banner(request,pk):
+
+    user = request.user
+    advertise = Advertise.objects.using(user.username).filter(id=pk)
+
+    if request.method == 'POST':
+            edit_title = request.POST.get('edit_title')
+            edit_photo = request.FILES.get('edit_photo')
+            edit_URL = request.POST.get('edit_URL')
+
+            if edit_photo != None:
+                Advertise.objects.using(user.username).filter(id=pk).update(title=edit_title,photo=edit_photo,URL=edit_URL) 
+                return redirect('/banner')
+            else:
+                Advertise.objects.using(user.username).filter(id=pk).update(title=edit_title,URL=edit_URL) 
+                return redirect('/banner')
+
+    context={
+        'advertise':advertise,
+    }
+
+    return render(request,'edit_banner.html',context)

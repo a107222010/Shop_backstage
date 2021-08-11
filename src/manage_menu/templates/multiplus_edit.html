@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content%}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <div class="main-body">
+            <div class="page-wrapper">
+                <div class="row">
+                    <div class="col-xl-8 col-md-6">
+                        <div class="card Recent-Users">
+                            <form method="POST" action="">
+                                {% csrf_token%}
+                                <div class="card-header">
+                                    <p>單選表</p>
+                                    <h5>
+                                        {{ unit_name.3 }}
+                                    </h5>
+
+                                </div>
+                                <div class="card-block px-0 py-3">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <th>名稱</th>
+                                                                <th>價格</th>
+                                                            </thead>
+                                                            <tbody id="newIce_size">
+                                                                {% for multi in multipleplus %}
+                                                                <tr class="mb-1">
+                                                                    <td>
+                                                                        <input type="text" value="{{ multi.name }}"
+                                                                            name="edit_multiname">
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ multi.price }}"
+                                                                            name="edit_multiprice">
+                                                                    </td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div>
+                                            <button class="btn btn-primary" type="submit"
+                                                style="position: absolute; bottom: 3px; right: 30px;">確定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

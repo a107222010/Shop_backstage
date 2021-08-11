@@ -123,14 +123,9 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-
-
-
-
-
 class Comment(models.Model):
     detail = models.ForeignKey('OrderDetail', models.DO_NOTHING, primary_key=True)
-    guest_account = models.ForeignKey('Guest', models.DO_NOTHING, db_column='guest_account')
+    guest_account = models.CharField(max_length=10)
     comment = models.CharField(max_length=200)
     comment_score = models.IntegerField()
 
@@ -228,23 +223,11 @@ class Product(models.Model):
         db_table = 'product'
 
 
-class ProductAddrule(models.Model):
-    product_add = models.CharField(primary_key=True, max_length=5)
-    add_chinese = models.CharField(max_length=50, blank=True, null=True)
-    add_table = models.CharField(max_length=100, blank=True, null=True)
-
-    def __str__(self):
-        return self.product_add
-
-    class Meta:
-        managed = False
-        db_table = 'product_addrule'
-
-
 class ProductCase(models.Model):
     product_add = models.CharField(primary_key=True, max_length=10)
     plus_id = models.IntegerField()
-
+    hide = models.IntegerField()
+    
     class Meta:
         managed = False
         db_table = 'product_case'
@@ -334,3 +317,11 @@ class Advertise(models.Model):
 
     class Meta:
         db_table = 'advertise'
+
+
+class TableUnit(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    unit = models.TextField(db_column='Unit')  # Field name made lowercase.
+
+    class Meta:
+        db_table = 'table_unit'

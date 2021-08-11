@@ -1,0 +1,45 @@
+{% extends 'base.html'%}
+{% block content%}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <div class="main-body">
+            <div class="page-wrapper">
+                <div class="row">
+                    <div class="col-xl-12 col-md-6">
+                            <div class="card Recent-Users">
+                                <div class="card-header">
+                                    <h5>廣告輪播調整</h5>
+                                </div>
+                                <form method="POST" action="" enctype="multipart/form-data">
+                                    <div>
+                                        {% csrf_token %}
+                                        {% for ad in advertise%}
+                                        <div class="mb-3">
+                                            <label for="edit_title" class="form-label">廣告標題</label>
+                                            <input type="text" class="form-control" id="edit_title" placeholder="請輸入廣告標題"
+                                                name="edit_title" value="{{ ad.title }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="ad_photo" class="form-label">目前廣告圖片</label>
+                                            <input type="text" class="form-control" id="ad_photo" value="{{ ad.photo }}" readonly>
+                                            <label for="ad_photo" class="form-label">預修改廣告圖片</label>
+                                            <input type="file" class="form-control" id="edit_photo" name="edit_photo" value="{{ ad.photo }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="edit_URL" class="form-label">廣告網址</label>
+                                            <input type="text" class="form-control" id="edit_URL" placeholder="請輸入廣告網址"
+                                                name="edit_URL" value="{{ ad.URL }}" required>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">送出</button>
+                                </form>
+                            </div>                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
