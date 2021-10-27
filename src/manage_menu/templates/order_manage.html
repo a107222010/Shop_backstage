@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="pcoded-content">
+<div class="pcoded-content" id="page">
     <div class="pcoded-inner-content">
         <div class="main-body">
             <form method="POST" enctype="multipart/form-data">
@@ -62,12 +62,16 @@
                 {% for list1 in saverecord1%}
                 <div class="row g-3">
                     <div class="col-sm">
-                    <label for="plus" class="form-label">加的配料-{{ forloop.counter }}</label>
-                    <input type="text" class="form-control" id="plus"  placeholder="請輸入其餘要求" name="plus" value="{{list1.0}}" readonly>
+                        <label for="plus" class="form-label">加的配料-{{ forloop.counter }}</label>
+                        <input type="text" class="form-control" id="plus"  placeholder="請輸入其餘要求" name="plus" value="{{list1.0}}" readonly>
                     </div>
                     <div class="col-sm">
-                    <label for="plus" class="form-label">價格</label>
-                    <input type="text" class="form-control" id="plus"  placeholder="請輸入其餘要求" name="plus" value="{{list1.1}}" readonly>
+                        <label for="plus" class="form-label">價格</label>
+                        <input type="text" class="form-control" id="plus"  placeholder="請輸入其餘要求" name="plus" value="{{list1.1}}" readonly>
+                    </div>
+                    <div class="col-sm">
+                        <label for="plus" class="form-label">數量</label>
+                        <input type="text" class="form-control" id="plus"  placeholder="請輸入其餘要求" name="plus" value="{{list1.2}}" readonly>
                     </div>
                 </div>
                 {% endfor %}
@@ -78,13 +82,17 @@
                 </div>
                 {% endfor %}
                 <br>
-                <button type="submit" class="btn btn-primary">儲存並返回</button>
+                
                 {% for i in saverecord%}
+                {% if i.3 == 0%}
                 <a href="/order_manage/order_fix/{{ i.5 }}/{{ i.0 }}/{{ i.13 }}" class="btn btn-primary">修改</a>
+                <a href="/order" class="btn btn-primary">返回</a>
+                {% else %}
+                <a href="/order_done" class="btn btn-primary">返回</a>
+                {% endif%}
                 {% endfor %}
             </form>
         </div>
     </div>
 </div>   
-
 {% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content%}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <div class="main-body">
+            <div class="page-wrapper">
+                <div class="row">
+                    <div class="col-xl-12 col-md-6">
+                        <div class="card Recent-Users">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="card-header">
+                                    <h5>
+                                        {% if messages %}
+                                        {% for message in messages %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {% if message.tags %} {{ message }} {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                        商品管理
+                                    </h5>
+                                </div>
+                                <br>
+                                <label class="form-label">產品單位及價格</label>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <th>單位</th>
+                                                        <th>價格</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for product in saverecords %}
+                                                        <tr class="mb-1">
+                                                            <td>
+                                                                <input type="text" name="edit_size" value="{{ product.product_size }}"
+                                                                    class="form-control">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="edit_price" value="{{ product.product_price }}"
+                                                                    class="form-control">
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#save" style="position: absolute; bottom: 3px; left: 25px;">
+                                            儲存並返回
+                                        </button>
+                                    </div>
+
+                                    <div>
+                                        <a href="/product_manage/{{ pk }}" class="btn btn-primary" style="position: absolute; bottom: 3px; right: 10px;"> 返回</a>
+                                    </div>
+                                </div>
+                                <!-- save Modal -->
+                                <div class="modal fade" id="save" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">修改單位及價格</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label>確定修改嗎?</label>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-light" type="button"
+                                                    data-dismiss="modal">返回</button>
+                                                <button class="btn btn-primary" type="submit" name="save">確定並返回</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

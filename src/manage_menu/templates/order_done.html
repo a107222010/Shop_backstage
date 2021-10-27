@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<meta http-equiv="refresh" content="30">
+
+<div class="pcoded-content">
+  <div class="pcoded-inner-content">
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li class="brand-text font-weight-light">
+          <font size='10'>訂單列表</font>
+        </li>
+      </ol>
+    </section>
+    <div class="row">
+      <div class="col">
+        <div>
+          <form action="order">
+            <div class="input-group rounded">
+              <input type="text" name="search" class="form-control rounded" placeholder="請輸入購買者" aria-label="Search"
+                aria-describedby="search-addon" />
+              <button type="submit" class="btn btn-primary" value="Search">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="main-body">
+      <div class="page-wrapper">
+        <div class="row">
+          <div class="col">
+            <table class="table table-striped table-hover table-bordered mt-3" style="table-layout:fixed;width:100%;">
+              <thead>
+                <tr>
+                  <th width="3%" style="vertical-align: middle !important;text-align: left;">訂單ID</th>
+                  <th width="8%" style="vertical-align: middle !important;text-align: left;">購買者</th>
+                  <th width="10%" style="vertical-align: middle !important;text-align: left;">訂購日期</th>
+                  <th width="10%" style="vertical-align: middle !important;text-align: left;">商品名稱</th>
+
+                </tr>
+              </thead>
+              <tbody id="table-body-box" class="table-hover">
+                {% for list in saverecord %}
+                <tr>
+                  <td style="vertical-align: middle !important;text-align: left;">
+                    <a href="/order_manage/{{ list.0 }}/{{ list.5 }}">{{ list.0 }}</a>
+                  </td>
+                  <td style="vertical-align: middle !important;text-align: left;">
+                    <font size="4">{{ list.1 }}
+                  </td>
+                  </font>
+                  <td style="vertical-align: middle !important;text-align: left;">
+                    <font size="4">{{ list.2|date:"Y-m-d H:i:s" }}
+                  </td>
+                  </font>
+                  <td style="vertical-align: middle !important;text-align: left;">
+                    <font size="4">{{ list.4}}
+                  </td>
+
+
+                  </font>
+                  </font>
+
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% if paginator.num_pages > 1 %}
+            <div class="pagination justify-content-center">
+              {% if saverecord.has_previous %}
+
+              <a class="pagination-action" href="?page=1">
+                <i class="fas fa-angle-double-left"></i>
+              </a>
+              <a class="pagination-action" href="?page={{ saverecord.previous_page_number }}">
+                <i class="fas fa-angle-left"></i>
+              </a>
+              {% endif %}
+
+              {% for num in saverecord.paginator.page_range %}
+
+              {% if saverecord.number == num %}
+              <span class="pagination-number pagination-current">{{ num }}</span>
+              {% elif num > saverecord.number|add:'-2' and num < saverecord.number|add:'2' %} <a
+                class="pagination-number" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+
+                {% endfor %}
+
+                {% if saverecord.has_next %}
+
+                <a class="pagination-action" href="?page={{ saverecord.next_page_number }}">
+                  <i class="fas fa-angle-right"></i>
+                </a>
+                <a class="pagination-action" href="?page={{ saverecord.paginator.num_pages }}">
+                  <i class="fas fa-angle-double-right"></i>
+                </a>
+
+                {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock content%}

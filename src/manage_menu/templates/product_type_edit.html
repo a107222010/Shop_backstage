@@ -7,13 +7,12 @@
                 <div class="row">
                     <div class="col-xl-8 col-md-6">
                         <div class="card Recent-Users">
-                            <form method="POST" action="">
+                            <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token%}
                                 <div class="card-header">
                                     <h5>
                                         商品類別調整
                                     </h5>
-
                                 </div>
                                 <div class="card-block px-0 py-3">
                                     <div class="table-responsive">
@@ -24,13 +23,17 @@
                                                         <table class="table table-hover">
                                                             <thead>
                                                                 <th>名稱</th>
+                                                                <th>圖片</th>
                                                             </thead>
                                                             <tbody id="newIce_size">
                                                                 {% for sorts in sort %}
                                                                 <tr class="mb-1">
                                                                     <td>
-                                                                        <input type="text" value="{{ sorts.type }}"
-                                                                            name="edit_sorttype">
+                                                                        <input type="text" value="{{ sorts.sort_type }}"
+                                                                            class = "form-control" name="edit_sorttype" required>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="file" name="edit_photo" class = "form-control">
                                                                     </td>
                                                                 </tr>
                                                                 {% endfor %}

@@ -8,93 +8,150 @@
         <div class="main-body">
             <div class="page-wrapper">
                 <div class="row">
-                    <div class="col-xl-8 col-md-6">
+                    <div class="col-xl-12 col-md-6">
                         <div class="card Recent-Users">
                             <div class="card-header">
+                                {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% if message.tags %} {{ message }} {% endif %}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
                                 <h5>訂單調整</h5>
                             </div>
                             <form method="POST">
-                                <div id="plus">
-                                {% csrf_token %}
-                                {% for list in saverecord %}
-                                <div class="mb-3">
-                                    <label for="detail_quantity" class="form-label">數量</label>
-                                    <input type="text" class="form-control" id="detail_quantity" placeholder="請輸入數量"
-                                        name="detail_quantity" value="{{list.6}}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="product_size" class="form-label">大小</label>
-                                    <select class="form-control" name="product_size">
-                                        <option value="{{ list.7 }}" style="display: none">{{ list.7 }}</option>
-                                        {% for product_sizes in product_size %}
-                                        <option value="{{ product_sizes.product_size }}" class="form-control">
-                                            {{ product_sizes.product_size }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    {% if not list.8 %}
-                                    {% else%}
-                                    <label for="ice_name" class="form-label">冰度</label>
-                                    <select class="form-control" name="ice_name">
-                                        <option value="{{ list.15 }}" style="display: none">{{ list.8 }}</option>
-                                        {% for ices in singleplus1 %}
-                                        <option value="{{ ices.number }}" class="form-control">{{ ices.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    {% endif %}
-                                </div>
-                                <div class="mb-3">
-                                    {% if not list.9 %}
-                                    {% else%}
-                                    <label for="sugar_name" class="form-label">糖度</label>
-                                    <select class="form-control" name="sugar_name">
-                                        <option value="{{ list.16 }}" style="display: none">{{ list.9 }}</option>
-                                        {% for sugars in singleplus2 %}
-                                        <option value="{{ sugars.number }}" class="form-control">{{ sugars.name }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                    {% endif %}
-                                </div>
-                                <div class="mb-3">
-                                    {% if not list.10 %}
-                                    {% else%}
-                                    <label for="coffee_plus_name" class="form-label">選擇濃縮咖啡</label>
-                                    <select class="form-control" name="coffee_plus_name">
-                                        <option value="{{ list.17 }}" style="display: none">{{ list.10 }}</option>
-                                        {% for coffeeplus in singleplus3 %}
-                                        <option value="{{ coffeeplus.number }}" class="form-control">{{ coffeeplus.name }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                    {% endif %}
-                                </div>
-                                <div class="mb-3">
-                                    <label for="add_other" class="form-label">其餘要求</label>
-                                    <input type="text" class="form-control" id="add_other" placeholder="無"
-                                        name="add_other" value="{{list.11}}">
-                                </div>
-                                {% endfor %}
+                                <div>
+                                    {% csrf_token %}
+                                    {% for list in saverecord %}
+                                    <div class="mb-3">
+                                        <label for="detail_quantity" class="form-label">數量</label>
+                                        <input type="text" class="form-control" id="detail_quantity" placeholder="請輸入數量"
+                                            name="detail_quantity" value="{{list.6}}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="product_size" class="form-label">大小</label>
+                                        <select class="form-control" name="product_size">
+                                            <option value="{{ list.7 }}" style="display: none">{{ list.7 }}</option>
+                                            {% for product_sizes in product_size %}
+                                            <option value="{{ product_sizes.product_size }}" class="form-control">
+                                                {{ product_sizes.product_size }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        {% if not list.8 %}
+                                        {% else%}
+                                        <label for="ice_name" class="form-label">冰度</label>
+                                        <select class="form-control" name="ice_name">
+                                            <option value="{{ list.15 }}" style="display: none">{{ list.8 }}</option>
+                                            {% for ices in singleplus1 %}
+                                            <option value="{{ ices.number }}" class="form-control">{{ ices.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        {% if not list.9 %}
+                                        {% else%}
+                                        <label for="sugar_name" class="form-label">糖度</label>
+                                        <select class="form-control" name="sugar_name">
+                                            <option value="{{ list.16 }}" style="display: none">{{ list.9 }}</option>
+                                            {% for sugars in singleplus2 %}
+                                            <option value="{{ sugars.number }}" class="form-control">{{ sugars.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        {% if not list.10 %}
+                                        {% else%}
+                                        <label for="coffee_plus_name" class="form-label">選擇濃縮咖啡</label>
+                                        <select class="form-control" name="coffee_plus_name">
+                                            <option value="{{ list.17 }}" style="display: none">{{ list.10 }}</option>
+                                            {% for coffeeplus in singleplus3 %}
+                                            <option value="{{ coffeeplus.number }}" class="form-control">
+                                                {{ coffeeplus.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="add_other" class="form-label">其餘要求</label>
+                                        <input type="text" class="form-control" id="add_other" placeholder="無"
+                                            name="add_other" value="{{list.11}}">
+                                    </div>
+                                    {% endfor %}
 
-                                <label class="form-label">調整配料</label><br>
-                                {% for i in saverecord3 %}
-                                <div class="mb-3">
-                                    <select class="form-control" name="select_plus">
-                                        <option type="text" value="{{ i.5 }}" style="display: none">{{ i.5 }}</option><br>
-                                        {% for x in saverecord1 %}
-                                        <option id="test" value="{{ x.1 }}" class="form-control">{{ x.1 }}</option>
-                                        {% endfor %}
-                                        <option type="text" value=None >無</option><br>
-                                    </select>                                    
+                                    <label class="form-label">調整配料</label>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <th>配料名稱</th>
+                                                            <th>數量</th>
+                                                            <th>刪除</th>
+                                                        </thead>
+                                                        <tbody id="plus">
+                                                            {% if saverecord3 %}
+                                                            {% for i in saverecord3 %}
+                                                            <tr class="mb-1">
+                                                                <td>
+                                                                    <select class="form-control" name="select_plus">
+                                                                        <option type="text" value="{{ i.5 }}"
+                                                                            style="display: none">{{ i.5 }}</option>
+                                                                        {% for x in saverecord1 %}
+                                                                        <option id="test" value="{{ x.1 }}"
+                                                                            class="form-control">{{ x.1 }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input class="form-control" type="number"
+                                                                        name="select_plus_quantity" value="{{ i.2 }}"
+                                                                        min="1">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="checkbox" value="{{ i.5 }}"
+                                                                        name="select_delete"
+                                                                        style="position: absolute; right: 120px;"
+                                                                        min="1">
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                            {% else %}
+                                                            <tr class="mb-1">
+                                                                <td style="width:150px">
+                                                                    <select class="form-control">
+                                                                        <option type="text" value="無">無</option><br>
+                                                                    </select>
+                                                                </td>
+                                                                <td style="width:220px">
+                                                                    <input class="form-control" type="text" value="無"
+                                                                        readonly>
+                                                                </td>
+                                                                <td style="width:10px">
+                                                                    <input type="checkbox"
+                                                                        style="position: absolute; right: 120px;"
+                                                                        disabled=”disabled”>
+                                                                </td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                {% endfor %}    
-                            </div>
-                                <button class="btn btn-primary" type="button" onclick="plus()">新增</button>
-                                <button class="btn btn-primary" type="submit" >確定並返回</button>
-                                                               
+                                <button class="btn btn-primary" type="submit" style="position: absolute; bottom: 3px; left: 25px;">確定並返回</button>
+                                <button class="btn btn-success" type="button" onclick="plus()" style="position: absolute; bottom: 3px; left: 150px;">新增</button>
                             </form>
-                            
                         </div>
                     </div>
                 </div>
@@ -102,25 +159,34 @@
         </div>
     </div>
 </div>
-<script > 
-    
+<script>
+
     function plus() {
         var plus = document.getElementById("plus");
         var br = document.createElement("br")
-        
-        var plus_name = "{{ plus_js1 }}"; 
+        var tr = document.createElement("tr")
+        tr.className = "mb-1";
+        var td1 = document.createElement("td")
+        var td2 = document.createElement("td")
+        var td3 = document.createElement("td")
+
+        var plus_name = "{{ plus_js1 }}";
         var plus_price = "{{ plus_js2 }}"
-        plus_name = plus_name.replace(/[^a-zA-Z\u4e00-\u9fa5,()+]/g,'')
-        var plus_item = plus_name.split(',')       
-  
-        let div = document.createElement('div');
-        div.className = "mb-3";
+        plus_name = plus_name.replace(/[^a-zA-Z\u4e00-\u9fa5,()+]/g, '')
+        var plus_item = plus_name.split(',')
 
         let select = document.createElement('select');
         select.className = "form-control";
         select.name = "plus_new";
 
-        for(i=0;i<plus_item.length;i++){
+        let input = document.createElement('input')
+        input.type = "number";
+        input.name = "select_plus_quantity_new";
+        input.className = "form-control";
+        input.value = "1";
+        input.min = "1";
+
+        for (i = 0; i < plus_item.length; i++) {
             let option = document.createElement('option')
             option.className = "form-control";
             plus_name = plus_item[i]
@@ -128,24 +194,25 @@
             option.text = plus_name;
             select.appendChild(option)
         }
-  
+
         let btn_delete = document.createElement('input')
         btn_delete.type = "button"
         btn_delete.value = "移除"
         btn_delete.setAttribute('class', 'btn btn-danger');
-        btn_delete.style.cssText = "padding: 3px 5px; position:absolute;right:10px;"
-  
-        
-  
-        div.appendChild(select)
-        div.appendChild(btn_delete)
-        plus.appendChild(div)
-        plus.appendChild(br)
-        
-  
+        btn_delete.style.cssText = "padding: 3px 5px; position:absolute;right:90px;"
+
+        td1.appendChild(select)
+        td2.appendChild(input)
+        td3.appendChild(btn_delete)
+        tr.appendChild(td1)
+        tr.appendChild(td2)
+        tr.appendChild(td3)
+        plus.appendChild(tr)
+
+
         btn_delete.onclick = function () {
-            div.remove()
+            tr.remove()
         };
     }
- </script>
+</script>
 {% endblock %}

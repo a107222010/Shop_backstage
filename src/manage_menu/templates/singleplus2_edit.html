@@ -7,14 +7,20 @@
                 <div class="row">
                     <div class="col-xl-8 col-md-6">
                         <div class="card Recent-Users">
-                            <form method="POST" action="">
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% if message.tags %} {{ message }} {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <form method="POST">
                                 {% csrf_token%}
                                 <div class="card-header">
                                     <p>單選表</p>
                                     <h5>
                                         {{ unit_name.1 }}
                                     </h5>
-
                                 </div>
                                 <div class="card-block px-0 py-3">
                                     <div class="table-responsive">

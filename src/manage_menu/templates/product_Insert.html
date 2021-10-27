@@ -8,162 +8,164 @@
                 <div class="row">
                     <div class="col-xl-12 col-md-6">
                         <div class="card Recent-Users">
-                            <form method="Post" action="../singleplus1">
+                            <form method="POST" action="" enctype="multipart/form-data">
                                 {% csrf_token%}
                                 <div class="card-header">
                                     <h5>
+                                        {% if messages %}
+                                        {% for message in messages %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {% if message.tags %} {{ message }} {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
                                         商品新增
                                     </h5>
                                 </div>
                                 <div class="card-block px-0 py-3">
                                     <div class="main-body">
-                                        <form method="POST" enctype="multipart/form-data">
-                                            {% csrf_token %}
-                                            <div class="mb-3">
-                                                <label for="product_id" class="form-label" >產品ID</label>
-                                                <input type="text" class="form-control" placeholder="請輸入產品ID"
-                                                    id="product_id" name="product_id" required>
-                                                <div id="emailHelp" class="form-text">請勿與其他商品重複</div>
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="product_id" class="form-label">產品ID</label>
+                                            <input type="text" class="form-control" placeholder="請輸入產品ID"
+                                                id="product_id" name="product_id" required>
+                                            <div id="emailHelp" class="form-text">請勿與其他商品重複</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="product_name" class="form-label">產品名稱</label>
+                                            <input type="text" class="form-control" id="product_name"
+                                                placeholder="請輸入產品名稱" name="product_name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="product_sort" class="form-label">產品分類</label>
+                                            <select class="form-control" id="mySelect" name="product_sort">
+                                                {% for sorts in sort %}
+                                                <option value="" style="display: none">----</option>
+                                                <option value="{{ sorts.sort_type }}" class="form-control">
+                                                    {{ sorts.sort_type }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="product_pic" class="form-label">選擇產品圖片</label>
+                                            <input type="file" class="form-control" id="product_pic" name="product_pic">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="product_add" class="form-label">產品加料分類</label>
+                                            <select class="form-control" name="product_add">
+                                                {% for add_rule in saverecord_addrule %}
+                                                <option value="" style="display: none">----</option>
+                                                <option value="{{ add_rule }}" class="form-control">{{ add_rule }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="product_introduction" class="form-label">產品介紹</label>
+                                            <input type="text" class="form-control" id="product_introduction"
+                                                placeholder="請輸入產品介紹" name="product_introduction" required>
+                                        </div>
+                                        <label class="form-label">產品單位及價格</label>
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <th>排序</th>
+                                                                <th>單位</th>
+                                                                <th>價格</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr class="mb-1">
+                                                                    <td>
+                                                                        <input type="text" name="insert1_index" value="1" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="insert1_size" class="form-control" required>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="insert1_price" class="form-control" required>
+                                                                    </td>                                                                  
+                                                                </tr>
+                                                                <tr class="mb-1">
+                                                                    <td>
+                                                                        <input type="text" name="insert2_index" value="2" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="insert2_size" class="form-control">
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="insert2_price" class="form-control">
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="mb-1">
+                                                                    <td>
+                                                                        <input type="text" name="insert3_index" value="3" class="form-control" readonly>
+                                                                   </td>                                                                  
+                                                                    <td>
+                                                                        <input type="text" name="insert3_size" class="form-control">
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="insert3_price" class="form-control">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <div>
+                                                <button class="btn btn-success" type="button" name="add_single1"
+                                                    style="position: absolute; bottom: 3px; right: 15px;"
+                                                    data-toggle="modal" data-target="#add_single1">新增更多排序</button>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="product_name" class="form-label" >產品名稱</label>
-                                                <input type="text" class="form-control" id="product_name"
-                                                    placeholder="請輸入產品名稱" name="product_name" required>
+                                            <div>
+                                                <button class="btn btn-primary" type="submit"
+                                                    style="position: absolute; bottom: 3px; right: 150px;">確定</button>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="product_sort" class="form-label" >產品分類</label>
-                                                <select class="form-control" id="mySelect" name="product_sort">
-                                                    {% for sorts in sort %}
-                                                    <option value="" style="display: none">----</option>
-                                                    <option value="{{ sorts.sort_type }}" class="form-control">{{
-                                                        sorts.sort_type }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="product_pic" class="form-label" >選擇產品圖片</label>
-                                                <input type="file" class="form-control" id="product_pic"
-                                                    name="product_pic">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="product_add" class="form-label" >產品加料分類</label>
-                                                <select class="form-control" name="product_add">
-                                                    {% for add_rule in saverecord_addrule %}
-                                                    <option value="" style="display: none">----</option>
-                                                    <option value="{{ add_rule }}" class="form-control">{{ add_rule }}
-                                                    </option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="product_introduction" class="form-label" >產品介紹</label>
-                                                <input type="text" class="form-control" id="product_introduction"
-                                                    placeholder="請輸入產品介紹" name="product_introduction" required>
-                                            </div>
-                                            <label class="form-label">產品價格</label>
-                                            <table class="table">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <table class="table table-hover">
-                                                                <thead>
-                                                                    <th>名稱</th>
-                                                                    <th>價格</th>
-                                                                    <th>排序</th>
-                                                                </thead>
-                                                                <tbody >
-                                                                    <tr class="mb-1">
-                                                                        <td>
-                                                                            <input type="text" name="multi_name" >
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="multi_price" >
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="multi_delete">
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr class="mb-1">
-                                                                        <td>
-                                                                            <input type="text" name="multi_name" >
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="multi_price" >
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="multi_delete">
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr class="mb-1">
-                                                                        <td>
-                                                                            <input type="text" name="multi_name" >
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="multi_price" >
-                                                                        </td>
-                                                                        <td>
-                                                                            <input type="text" name="multi_delete">
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <br>
-                                            <br>
-                                            <div class="row">
-                                                <div>
-                                                    <button class="btn btn-success" type="button" name="add_single1"
-                                                        style="position: absolute; bottom: 3px; right: 30px;"
-                                                        data-toggle="modal" data-target="#add_single1">新增</button>
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-primary" type="submit"
-                                                        style="position: absolute; bottom: 3px; right: 110px;">確定</button>
-                                                </div>
-                                            </div>
+                                        </div>
 
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="add_single1" role="dialog" tabindex="-1">
-                                                <div class="modal-dialog " role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">新增{{ unit_name.0 }}</h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close"><span
-                                                                    aria-hidden="true">×</span></button>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="add_single1" role="dialog" tabindex="-1">
+                                            <div class="modal-dialog " role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">新增更多排序</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span
+                                                                aria-hidden="true">×</span></button>
+                                                    </div>
+                                                    {% csrf_token %}
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label for="recipient-name"
+                                                                class="col-form-label">名稱</label>
+                                                            <input type="text" class="form-control" id="recipient-name"
+                                                                name="new_single1name">
                                                         </div>
-                                                        <form method="POST" action="../ice_plus">
-                                                            {% csrf_token %}
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label for="recipient-name"
-                                                                        class="col-form-label">名稱</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="recipient-name" name="new_single1name">
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label for="recipient-name"
-                                                                        class="col-form-label">價格</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="recipient-name" name="new_single1price">
-                                                                </div>
+                                                        <div class="mb-3">
+                                                            <label for="recipient-name"
+                                                                class="col-form-label">價格</label>
+                                                            <input type="text" class="form-control" id="recipient-name"
+                                                                name="new_single1price">
+                                                        </div>
 
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn-light" type="button"
-                                                                    data-dismiss="modal">返回</button>
-                                                                <button class="btn btn-primary" type="submit"
-                                                                    name="insert_single1">確定並返回</button>
-                                                            </div>
-                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-light" type="button"
+                                                            data-dismiss="modal">返回</button>
+                                                        <button class="btn btn-primary" type="submit"
+                                                            name="insert_single1">確定並返回</button>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                        </form>
                                     </div>
                                 </div>
                             </form>

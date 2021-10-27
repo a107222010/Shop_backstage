@@ -24,12 +24,11 @@ from django.views.static import serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('manage_menu.urls')),
-    # path('comebuy/', include('comebuy_menu.urls',namespace='comebuy')),
     path('login/', views.login_view),
     path('sign_up/', views.sign_up),
     path('logout/', views.logout_view,name="logout"),
+    # path('comebuy/', include('comebuy_menu.urls',namespace='comebuy')),
     # url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
-
     # url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
 

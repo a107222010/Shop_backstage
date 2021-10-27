@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <div class="main-body">
+            <div class="page-wrapper">
+                <div class="row">
+                    <div class="col-xl-12 col-md-6">
+                        <div class="card Recent-Users">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="card-header">
+                                    <h5>
+                                        員工帳號創建
+                                    </h5>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="account" class="form-label">帳號</label>
+                                    <input type="text" class="form-control" placeholder="請輸入帳號" id="account"
+                                        name="account">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">密碼</label>
+                                    <input type="text" class="form-control" placeholder="請輸入密碼" id="password"
+                                        name="password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">確認</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

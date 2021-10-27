@@ -90,19 +90,19 @@ DATABASES = {
             'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
         }
     },
-    'starbucks': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'starbucks', # 目標資料庫的名稱
-        'USER': 'root', # 資料庫帳號
-        'PASSWORD': '', # 資料庫密碼
-        'HOST': 'localhost', # 主機位置，可以先測本地localhost
-        'PORT': '3306', # 設定連接埠
-        'OPTIONS':{
-            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
-        }
-    },
+    # 'starbucks': {
+    #     # 'ENGINE': 'django.db.backends.sqlite3',
+    #     # 'NAME': BASE_DIR / 'db.sqlite3',
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'starbucks', # 目標資料庫的名稱
+    #     'USER': 'root', # 資料庫帳號
+    #     'PASSWORD': '', # 資料庫密碼
+    #     'HOST': 'localhost', # 主機位置，可以先測本地localhost
+    #     'PORT': '3306', # 設定連接埠
+    #     'OPTIONS':{
+    #         'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
+    #     }
+    # },
     # 'default':{
     #     'ENGINE': 'django.db.backends.mysql',
     #     'NAME': 'comebuy', # 目標資料庫的名稱
@@ -168,5 +168,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# DATABASE_ROUTERS = ['routers.db_routers.AuthRouter',]

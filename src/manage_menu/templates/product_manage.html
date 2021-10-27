@@ -1,178 +1,311 @@
 {% extends 'base.html' %}
-{% load static %}
-<!-- CSS only -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<title>新增店家資料</title>
-
 
 {% block content %}
 <div class="pcoded-content">
     <div class="pcoded-inner-content">
-        <section class="content-header">
-            <ol class="breadcrumb">
-                <li class="brand-text font-weight-light">
-                    <font size='10'>菜單管理</font>
-                </li>
-            </ol>
-        </section>
         <div class="main-body">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="product_id" class="form-label">產品ID</label>
-                    <input type="text" class="form-control" placeholder="請輸入產品ID" id="product_id" name="product_id"
-                        value="{{saverecord.product_id}}" readonly>
-                    <div id="emailHelp" class="form-text">請勿與其他商品重複</div>
-                </div>
-                <div class="mb-3">
-                    <label for="product_name" class="form-label">產品名稱</label>
-                    <input type="text" class="form-control" id="product_name" placeholder="請輸入產品名稱" name="product_name"
-                        value="{{saverecord.product_name}}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="product_sort" class="form-label">產品分類</label>
-                    <select class="form-control" id="mySelect" name="product_sort">
-                        {% for sorts in sort %}
-                        <option value="{{ saverecord.product_sort }}" style="display: none">{{ saverecord.product_sort }}</option>
-                        <option value="{{ sorts.sort_type }}" class="form-control">{{ sorts.sort_type }}</option>
-                        {% endfor %}
-                    </select>
-                    <!-- <input type="text" class="form-control" id="product_sort" placeholder="請輸入產品分類" name="product_sort"
-                        value="{{saverecord.product_sort}}" required> -->
-                </div>
-                <div class="mb-3">
-                    <label for="product_pic" class="form-label">產品圖片</label><br>
-                    <img src="/media/{{saverecord.product_pic}}" width=200px>
-                    <br>
-                    <label class="form-label">{{saverecord.product_pic}}</label><br><br>
-                    <label class="form-label">更換圖片</label>
-                    <input type="file" class="form-control" id="product_pic" name="product_pic">
-                </div>
-                <div class="mb-3">
-                    <label for="product_add" class="form-label">產品加料分類</label>
-                    <select class="form-control" name="product_add">
-                        {% for add_rule in product_addrule %}
-                        <option value="{{ saverecord.product_add }}" style="display: none">{{ saverecord.product_add }}
-                        </option>
-                        <option value="{{ add_rule }}" class="form-control">{{ add_rule }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="product_introduction" class="form-label">產品介紹</label>
-                    <input type="text" class="form-control" id="product_introduction" placeholder="請輸入產品介紹"
-                        name="product_introduction" value="{{saverecord.product_introduction}}" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="product_size" class="form-label">產品大小杯</label>
-                    <br>
-                    {% for product_sizes in product_size %}
-
-                    <input type="text" id="product_sizes" value="{{ product_sizes }}" readonly />
-
-                    {% endfor %}
-                    <!-- <select class="col-sm-4" id="mySelect" onchange="myFunction()">
-                        <option value="middle">中杯</option>
-                        <option value="big">大杯</option>
-                        <option value="superbig">超大杯</option>
-                    </select>
-                    <p id="demo"></p> -->
-                </div>
-                <div class="mb-3">
-                    <label for="product_price" class="form-label">產品價格</label>
-                    <br>
-
-                    {% for product_prices in product_price %}
-                    <input type="text" id="product_prices" name="product_prices" value="{{ product_prices }}" />
-                    {% endfor %}
-
-                    <!-- <input type="text" id="demo" value="{{ first.product_price }}"/> -->
-                    <!-- <input type="text" id="demo1" value="{{ two.product_price }}"/> -->
-                    <!-- <input type="text" id="demo2" value="{{ third.product_price }}"/> -->
-                </div>
+            <div class="page-wrapper">
                 <div class="row">
-                    <div >
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#save">
-                            儲存並返回
-                        </button>
-                    </div>
-                    <div >
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete">
-                            刪除此項產品
-                        </button>
-                    </div>
-                    <div class="right col-1">
-                        <a href="/" class="btn btn-primary"> 返回</a>
-                    </div>
-                </div>
-                <!-- save Modal -->
-                <div class="modal fade" id="save" role="dialog" tabindex="-1">
-                    <div class="modal-dialog " role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">確定更改?</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <label>確定新增 <span style="color:rgb(0, 0, 255);">{{saverecord.product_name}}</span>
-                                    相關資訊嗎?</label>
+                    <div class="col-xl-12 col-md-6">
+                        <div class="card Recent-Users">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="card-header">
+                                    <h5>
+                                        {% if messages %}
+                                        {% for message in messages %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {% if message.tags %} {{ message }} {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                        商品管理
+                                    </h5>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#delete" style="position: absolute; right: 0;">
+                                        刪除此項產品
+                                    </button>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="product_id" class="form-label">產品ID</label>
+                                    <input type="text" class="form-control" placeholder="請輸入產品ID" id="product_id"
+                                        name="product_id" value="{{saverecord.product_id}}" readonly>
+                                    <div id="emailHelp" class="form-text">請勿與其他商品重複</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="product_name" class="form-label">產品名稱</label>
+                                    <input type="text" class="form-control" id="product_name" placeholder="請輸入產品名稱"
+                                        name="product_name" value="{{saverecord.product_name}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="product_sort" class="form-label">產品分類</label>
+                                    <select class="form-control" id="mySelect" name="product_sort">
+                                        {% for sorts in sort %}
+                                        <option value="{{ saverecord.product_sort }}" style="display: none">
+                                            {{ saverecord.product_sort }}</option>
+                                        <option value="{{ sorts.sort_type }}" class="form-control">{{ sorts.sort_type }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="product_pic" class="form-label">產品圖片</label><br>
+                                    <img src="/media/{{saverecord.product_pic}}" width=200px>
+                                    <br>
+                                    <label class="form-label">{{saverecord.product_pic}}</label><br><br>
+                                    <label class="form-label">更換圖片</label>
+                                    <input type="file" class="form-control" id="product_pic" name="product_pic">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="product_add" class="form-label">產品加料分類</label>
+                                    <select class="form-control" id="product_add" name="product_add">
+                                        <option value="{{ saverecord.product_add }}" style="display: none">
+                                            {{ saverecord.product_add }}
+                                        </option>
+                                        {% for add_rule in saverecord_addrule %}
+                                        <option value="{{ add_rule }}" class="form-control">{{ add_rule }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- <div class="mb-3">
+                                    <label for="product_introduction" class="form-label">產品介紹</label>
+                                    <input type="text" class="form-control" id="product_introduction"
+                                        placeholder="請輸入產品介紹" name="product_introduction"
+                                        value="{{saverecord.product_introduction}}" required>
+                                </div> -->
+                                <div class="mb-3">
+                                    <label for="product_introduction" class="form-label">產品介紹</label>
+                                    <textarea class="form-control" placeholder="請輸入產品介紹" id="product_introduction"
+                                        id="product_introduction" name="product_introduction" style="height: 100px"
+                                        required>{{saverecord.product_introduction}}</textarea>
+                                </div>
 
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-light" type="button" data-dismiss="modal">返回</button>
-                                <button class="btn btn-primary" type="submit" name="save">確定並返回</button>
-                            </div>
+                                <label class="form-label">產品單位及價格</label>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <th>排序</th>
+                                                        <th>單位</th>
+                                                        <th>價格</th>
+                                                        <th>修改</th>
+                                                        <th>刪除</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for product in saverecords %}
+                                                        {% if product.hide == 0 %}
+                                                        <tr class="mb-1">
+                                                            <td>
+                                                                <input type="text" value="{{ product.size }}"
+                                                                    class="form-control" readonly>
+
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" value="{{ product.product_size }}"
+                                                                    class="form-control" readonly>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="edit_price"
+                                                                    value="{{ product.product_price }}"
+                                                                    class="form-control" readonly>
+                                                            </td>
+                                                            <td>
+                                                                <a
+                                                                    href="/product_manage_edit/{{saverecord.product_id}}/{{ product.product_size }}">修改</a>
+                                                            </td>
+                                                            <td>
+                                                                <input type="checkbox"
+                                                                    value="{{ product.productsize_id }}"
+                                                                    name="edit_delete"
+                                                                    style="position: absolute; right: 55px;">
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <div class="row">
+                                    <div>
+                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                            data-target="#insert" style="position: absolute; bottom:3px; left:130px;">
+                                            新增
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                            data-target="#index" style="position: absolute; bottom:3px; left:25px;">
+                                            修改排序
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#save" style="position: absolute; bottom: 3px; right: 0px;">
+                                            儲存
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- index Modal -->
+                                <div class="modal fade" id="index" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">新增單位及價格</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <table class="table table-hover">
+                                                                    <thead>
+                                                                        <th>排序</th>
+                                                                        <th>單位</th>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {% for product in saverecords %}
+                                                                        {% if product.hide == 0 %}
+                                                                        <tr class="mb-1">
+                                                                            <td>
+                                                                                <select class="form-control"
+                                                                                    id="mySelect" name="edit_index">
+                                                                                    {% for sorts in size_index %}
+                                                                                    <option value="{{ product.size }}"
+                                                                                        style="display: none">
+                                                                                        {{ product.size }}</option>
+                                                                                    <option value="{{ sorts }}"
+                                                                                        class="form-control">{{ sorts }}
+                                                                                    </option>
+                                                                                    {% endfor %}
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="text" name="edit_name"
+                                                                                    value="{{ product.product_size }}"
+                                                                                    class="form-control" readonly>
+                                                                            </td>
+                                                                        </tr>
+                                                                        {% endif %}
+                                                                        {% endfor %}
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-light" type="button"
+                                                    data-dismiss="modal">返回</button>
+                                                <button class="btn btn-primary" type="submit"
+                                                    name="index">確定並返回</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- save Modal -->
+                                <div class="modal fade" id="save" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">確定更改?</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label>確定儲存 <span
+                                                        style="color:rgb(0, 0, 255);">{{saverecord.product_name}}</span>
+                                                    相關資訊嗎?</label>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-light" type="button"
+                                                    data-dismiss="modal">返回</button>
+                                                <button class="btn btn-primary" type="submit" name="save">確定並返回</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- delete Modal -->
+                                <div class="modal fade" id="delete" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">確定刪除?</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label>確定刪除 <span
+                                                        style="color:rgb(255, 0, 0);">{{saverecord.product_name}}</span>
+                                                    相關資訊嗎?</label>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-light" type="button"
+                                                    data-dismiss="modal">返回</button>
+                                                <button class="btn btn-danger" type="submit"
+                                                    name="delete">確定並返回</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- insert Modal -->
+                                <div class="modal fade" id="insert" role="dialog" tabindex="-1">
+                                    <div class="modal-dialog " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">新增單位及價格</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="new_insertname" class="col-form-label">單位名稱</label>
+                                                    <input type="text" class="form-control" id="new_insertname"
+                                                        name="new_insertname">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="new_insertprice" class="col-form-label">單位價格</label>
+                                                    <input type="text" class="form-control" id="new_insertprice"
+                                                        name="new_insertprice">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="new_insertindex" class="col-form-label">單位排序</label>
+                                                    <input type="text" class="form-control" id="new_insertindex"
+                                                        name="new_insertindex" value="{{ maxsize }}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-light" type="button"
+                                                    data-dismiss="modal">返回</button>
+                                                <button class="btn btn-primary" type="submit"
+                                                    name="insert">確定並返回</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
+
+                    </div>
+                    <div>
+                        <a href="/" class="btn btn-primary" style="position: absolute; bottom: 3px; right: 30px;">返回</a>
                     </div>
                 </div>
-
-                <!-- delete Modal -->
-                <div class="modal fade" id="delete" role="dialog" tabindex="-1">
-                    <div class="modal-dialog " role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">確定刪除?</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <label>確定刪除 <span style="color:rgb(255, 0, 0);">{{saverecord.product_name}}</span>
-                                    相關資訊嗎?</label>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-light" type="button" data-dismiss="modal">返回</button>
-                                <button class="btn btn-danger" type="submit" name="delete">確定並返回</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
+
 {% endblock content%}
-
-{% block script %}
-
-<script>
-    function myFunction() {
-        var x = document.getElementById("mySelect").value;
-        if (x == "middle") {
-            document.getElementById("demo").value = innerHTML;
-        }
-        if (x == "big") {
-            document.getElementById("demo").value = "{{ two.product_price }}";
-        }
-        if (x == "superbig") {
-            document.getElementById("demo").value = "{{ third.product_price }}";
-        }
-    }
-
-
-</script>
-{% endblock script %}

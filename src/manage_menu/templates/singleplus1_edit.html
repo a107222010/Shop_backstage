@@ -7,7 +7,14 @@
                 <div class="row">
                     <div class="col-xl-8 col-md-6">
                         <div class="card Recent-Users">
-                            <form method="Post" action="">
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% if message.tags %} {{ message }} {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <form method="POST">
                                 <div class="card-header">
                                     <p>單選表</p>
                                     <h5>
