@@ -15,7 +15,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login
 from manage_proj import settings
 
-
 @login_required
 def menu_list(request):
     user = request.user.get_short_name()
@@ -283,15 +282,11 @@ def order_done(request):
     if 'search' in request.GET:
         search=request.GET['search']
         cursor = connections[user].cursor()
-        cursor.execute('SELECT DISTINCT drink_order.*,product.product_name,order_detail.detail_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id  WHERE guest_account = %s ORDER BY drink_order.order_date ASC',[search])
+        cursor.execute('SELECT DISTINCT drink_order.*,product.product_name,order_detail.detail_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id WHERE guest_account = %s AND drink_order.order_status = %s ORDER BY drink_order.order_date ASC',[search,1])
         saverecord = cursor.fetchall()
-        
-        
+               
         if not request.GET['search']:
-
-            cursor = connections[user].cursor()
-            cursor.execute('SELECT DISTINCT drink_order.*,product.product_name,order_detail.detail_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id ORDER BY drink_order.order_date ASC')
-            saverecord = cursor.fetchall()
+            return redirect('/order_done')
     
     context = {
         'saverecord':saverecord,
@@ -315,15 +310,11 @@ def order(request):
     if 'search' in request.GET:
         search=request.GET['search']
         cursor = connections[user].cursor()
-        cursor.execute('SELECT DISTINCT drink_order.*,product.product_name,order_detail.detail_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id  WHERE guest_account = %s ORDER BY drink_order.order_date ASC',[search])
+        cursor.execute('SELECT DISTINCT drink_order.*,product.product_name,order_detail.detail_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id  WHERE guest_account = %s AND drink_order.order_status = %s ORDER BY drink_order.order_date ASC',[search,0])
         saverecord = cursor.fetchall()
-        
-        
+               
         if not request.GET['search']:
-
-            cursor = connections[user].cursor()
-            cursor.execute('SELECT DISTINCT drink_order.*,product.product_name,order_detail.detail_id FROM drink_order left join order_detail on drink_order.order_id = order_detail.order_id left join product_size on product_size.productsize_id = order_detail.productsize_id left join product on product.product_id = product_size.product_id ORDER BY drink_order.order_date ASC')
-            saverecord = cursor.fetchall()
+            return redirect('/order')
     
     context = {
         'saverecord':saverecord,
