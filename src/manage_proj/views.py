@@ -530,11 +530,11 @@ def sign_up(request):
                 \
                 \
                 ALTER TABLE `drink_order`\
-                MODIFY `order_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;\
+                MODIFY `order_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\
                 \
                 \
                 ALTER TABLE `multipleplus`\
-                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100003;\
+                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\
                 \
                 \
                 ALTER TABLE `order_detail`\
@@ -546,22 +546,22 @@ def sign_up(request):
                 \
                 \
                 ALTER TABLE `singleplus_1`\
-                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;\
+                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\
                 \
                 \
                 ALTER TABLE `singleplus_2`\
-                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;\
+                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\
                 \
                 \
                 ALTER TABLE `singleplus_3`\
-                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;\
+                MODIFY `number` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\
                 \
                 \
                 ALTER TABLE `sort`\
-                MODIFY `sort_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;\
+                MODIFY `sort_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\
                 \
                 ALTER TABLE `table_unit`\
-                MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;\
+                MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;\
                 \
                 \
                 ALTER TABLE `auth_group_permissions`\
