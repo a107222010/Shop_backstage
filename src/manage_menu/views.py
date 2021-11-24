@@ -552,11 +552,8 @@ def member(request):
 @login_required
 def comment(request):
 
-    # saverecord = []
-
     user = request.user.get_short_name()
 
-    # comment = Comment.objects.using(user).all()
     cursor = connections[user].cursor()
     cursor.execute('SELECT order_detail.order_id, comment.*, drink_order.order_status FROM comment JOIN order_detail ON comment.detail_id = order_detail.detail_id JOIN drink_order on drink_order.order_id = order_detail.order_id WHERE drink_order.order_status = %s',[1])
     comment = cursor.fetchall()
@@ -567,15 +564,12 @@ def comment(request):
 
     comment = paginator.get_page(page)
 
-    
-
-
     if 'search' in request.GET:
         search=request.GET['search']
         if (search != ''):
-            # comment = Comment.objects.using(user).filter(Q(detail__detail_id=search))
-            comment = Comment.objects.using(user).filter(guest_account = search)
-
+            cursor = connections[user].cursor()
+            cursor.execute('SELECT order_detail.order_id, comment.*, drink_order.order_status FROM comment JOIN order_detail ON comment.detail_id = order_detail.detail_id JOIN drink_order on drink_order.order_id = order_detail.order_id WHERE comment.guest_account = %s',[search])
+            comment = cursor.fetchall()
         else:
             return redirect('/comment')
                  
